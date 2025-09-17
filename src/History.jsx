@@ -6,28 +6,41 @@ import { Download, Trash2 } from "lucide-react";
 
 export default function History() {
   const [history, setHistory] = useState([]);
+  const API_URL = import.meta.env.VITE_API_URL; // ✅ Use env variable
 
   useEffect(() => {
     fetchHistory();
   }, []);
 
   const fetchHistory = async () => {
-    const res = await axios.get("http://localhost:5000/api/history");
-    setHistory(res.data);
+    try {
+      const res = await axios.get(`${API_URL}/api/history`);
+      setHistory(res.data);
+    } catch (err) {
+      console.error("❌ Error fetching history:", err);
+    }
   };
 
   const clearHistory = async () => {
-    await axios.delete("http://localhost:5000/api/history");
-    setHistory([]);
+    try {
+      await axios.delete(`${API_URL}/api/history`);
+      setHistory([]);
+    } catch (err) {
+      console.error("❌ Error clearing history:", err);
+    }
   };
 
   const deleteItem = async (id) => {
-    await axios.delete(`http://localhost:5000/api/history/${id}`);
-    setHistory(history.filter((item) => item._id !== id));
+    try {
+      await axios.delete(`${API_URL}/api/history/${id}`);
+      setHistory(history.filter((item) => item._id !== id));
+    } catch (err) {
+      console.error("❌ Error deleting item:", err);
+    }
   };
 
   const handleDownload = (format) => {
-    window.open(`http://localhost:5000/api/history/download?format=${format}`, "_blank");
+    window.open(`${API_URL}/api/history/download?format=${format}`, "_blank");
   };
 
   return (
@@ -45,15 +58,6 @@ export default function History() {
               <Download className="inline w-4 h-4 mr-2" />
               Download
             </motion.button>
-            {/* Dropdown menu */}
-            <div className="absolute hidden group-hover:block mt-2 bg-white shadow rounded-lg">
-              <button
-                className="block px-4 py-2 hover:bg-gray-100 w-full text-left"
-                onClick={() => handleDownload("txt")}
-              >
-                Download as .txt
-              </button>
-            </div>
           </div>
           <motion.button
             whileTap={{ scale: 0.95 }}
@@ -89,7 +93,5 @@ export default function History() {
         ))}
       </div>
     </div>
-
-    
   );
 }
