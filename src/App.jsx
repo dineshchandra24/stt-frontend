@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Download, Trash2, LogOut, Menu, X, Copy, Check, Lock, Mail, User, Eye, EyeOff } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'https://stt-backend-k837.onrender.com/';
 
 export default function EchoScribe() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
