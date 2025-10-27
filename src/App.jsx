@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Mic, MicOff, Download, Trash2, LogOut, Menu, X, Copy, Check, Lock, Mail, User, Eye, EyeOff } from 'lucide-react';
+import { Mic, MicOff, Download, Trash2, LogOut, Menu, X, Copy, Check, Lock, Mail, User, Eye, EyeOff, Upload } from 'lucide-react';
 
 const API_BASE_URL = 'https://stt-backend-k837.onrender.com';
 
@@ -21,11 +21,13 @@ export default function EchoScribe() {
   const [recordingTime, setRecordingTime] = useState(0);
   const [successMessage, setSuccessMessage] = useState('');
   const [currentView, setCurrentView] = useState('home');
+  const [uploadingFile, setUploadingFile] = useState(false);
 
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const recordingIntervalRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -182,6 +184,29 @@ export default function EchoScribe() {
       alert('Error transcribing audio');
     } finally {
       setIsProcessing(false);
+    }
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/mp3', 'audio/ogg', 'audio/webm', 'audio/m4a', 'audio/flac'];
+    if (!allowedTypes.includes(file.type) && !file.name.match(/\.(mp3|wav|ogg|webm|m4a|flac)$/i)) {
+      alert('Please upload a valid audio file (MP3, WAV, OGG, WEBM, M4A, FLAC)');
+      return;
+    }
+
+    if (file.size > 25 * 1024 * 1024) {
+      alert('File size must be less than 25MB');
+      return;
+    }
+
+    setUploadingFile(true);
+    await sendAudioToDeepgram(file);
+    setUploadingFile(false);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -554,6 +579,40 @@ export default function EchoScribe() {
                   <p className="text-blue-400 font-bold text-xl">⏳ Processing with Deepgram AI...</p>
                 </div>
               )}
+            </div>
+
+            {/* File Upload Section */}
+            <div className="mt-10 pt-10 border-t-2 border-purple-500/30">
+              <h3 className="text-2xl font-black text-center text-white mb-6">📁 Or Upload Audio File</h3>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="audio/*,.mp3,.wav,.ogg,.webm,.m4a,.flac"
+                onChange={handleFileUpload}
+                disabled={uploadingFile || isProcessing || isRecording}
+                className="hidden"
+                id="audio-upload"
+              />
+              <label
+                htmlFor="audio-upload"
+                className={`flex flex-col items-center justify-center gap-4 p-8 border-2 border-dashed rounded-2xl transition-all duration-300 cursor-pointer ${
+                  uploadingFile || isProcessing || isRecording
+                    ? 'border-gray-600 bg-slate-700/20 cursor-not-allowed opacity-50'
+                    : 'border-purple-500/50 bg-slate-700/20 hover:bg-slate-700/40 hover:border-purple-500'
+                }`}
+              >
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center shadow-xl">
+                  <Upload className="w-10 h-10 text-white" />
+                </div>
+                <div className="text-center">
+                  <p className="text-xl font-bold text-white mb-2">
+                    {uploadingFile ? '📤 Uploading...' : '🎵 Click to Upload Audio'}
+                  </p>
+                  <p className="text-sm text-gray-400">
+                    Supports MP3, WAV, OGG, WEBM, M4A, FLAC (Max 25MB)
+                  </p>
+                </div>
+              </label>
             </div>
 
             {transcript && (
