@@ -438,65 +438,83 @@ export default function EchoScribe() {
         </div>
       )}
 
-      <header className="bg-slate-800/80 backdrop-blur-2xl sticky top-0 z-50 border-b-2 border-purple-500/30 shadow-2xl relative">
-        <div className="max-w-7xl mx-auto px-4 py-5 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <div className="bg-gradient-to-br from-purple-600 via-pink-500 to-blue-600 w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl shadow-purple-500/50">
-              <Mic className="w-8 h-8 text-white" />
+      <header className="bg-slate-900/60 backdrop-blur-xl sticky top-0 z-50 border-b border-purple-500/20 shadow-lg relative">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3 flex justify-between items-center">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="bg-gradient-to-br from-purple-600 via-pink-500 to-blue-600 w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shadow-lg shadow-purple-500/30">
+              <Mic className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
-            <div>
-              <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">EchoScribe</h1>
-              <p className="text-sm text-gray-400">👋 Welcome, <span className="font-bold text-purple-400">{currentUser?.name}</span></p>
+            <div className="hidden xs:block">
+              <h1 className="text-lg sm:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">EchoScribe</h1>
+              <p className="text-[10px] sm:text-xs text-gray-400 leading-tight">Hi, <span className="font-semibold text-purple-400">{currentUser?.name}</span></p>
             </div>
+            <h1 className="block xs:hidden text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400">EchoScribe</h1>
           </div>
           
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-2">
             <button
               onClick={() => setCurrentView('home')}
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
                 currentView === 'home'
-                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50'
-                  : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700'
+                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-md shadow-purple-500/30'
+                  : 'text-gray-300 hover:bg-slate-700/50'
               }`}
             >
-              <Mic size={20} /> Home
+              <Mic size={16} /> Home
             </button>
             <button
               onClick={() => setCurrentView('dashboard')}
-              className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition-all duration-300 transform hover:scale-105 ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
                 currentView === 'dashboard'
-                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50'
-                  : 'bg-slate-700/50 text-gray-300 hover:bg-slate-700'
+                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-md shadow-purple-500/30'
+                  : 'text-gray-300 hover:bg-slate-700/50'
               }`}
             >
               📊 Dashboard
             </button>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-5 py-3 bg-red-500/20 text-red-400 rounded-xl hover:bg-red-500/30 transition-all duration-300 font-bold border-2 border-red-500/30 hover:border-red-500/50 transform hover:scale-105"
+              className="flex items-center gap-1.5 px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-all duration-300 text-sm font-semibold border border-red-500/30"
             >
-              <LogOut size={20} /> Logout
+              <LogOut size={16} /> Logout
             </button>
           </div>
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-3 hover:bg-purple-500/20 rounded-xl transition-all duration-300 transform hover:scale-110"
+            className="lg:hidden p-2 hover:bg-purple-500/10 rounded-lg transition-all duration-300"
           >
-            {mobileMenuOpen ? <X className="text-white" size={28} /> : <Menu className="text-white" size={28} />}
+            {mobileMenuOpen ? <X className="text-white" size={22} /> : <Menu className="text-white" size={22} />}
           </button>
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden border-t-2 border-purple-500/30 p-4 space-y-3 bg-slate-800/90">
-            <button onClick={() => { setCurrentView('home'); setMobileMenuOpen(false); }} className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold transition ${currentView === 'home' ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white' : 'bg-slate-700/50 text-gray-300'}`}>
-              <Mic size={20} /> Home
+          <div className="lg:hidden border-t border-purple-500/20 p-3 space-y-2 bg-slate-900/80 backdrop-blur-xl">
+            <button 
+              onClick={() => { setCurrentView('home'); setMobileMenuOpen(false); }} 
+              className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition text-sm ${
+                currentView === 'home' 
+                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-md' 
+                  : 'bg-slate-700/30 text-gray-300'
+              }`}
+            >
+              <Mic size={18} /> Home
             </button>
-            <button onClick={() => { setCurrentView('dashboard'); setMobileMenuOpen(false); }} className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold transition ${currentView === 'dashboard' ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white' : 'bg-slate-700/50 text-gray-300'}`}>
+            <button 
+              onClick={() => { setCurrentView('dashboard'); setMobileMenuOpen(false); }} 
+              className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition text-sm ${
+                currentView === 'dashboard' 
+                  ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-md' 
+                  : 'bg-slate-700/30 text-gray-300'
+              }`}
+            >
               📊 Dashboard
             </button>
-            <button onClick={handleLogout} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-500/20 text-red-400 rounded-xl hover:bg-red-500/30 transition font-bold border-2 border-red-500/30">
-              <LogOut size={20} /> Logout
+            <button 
+              onClick={handleLogout} 
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition font-semibold border border-red-500/30 text-sm"
+            >
+              <LogOut size={18} /> Logout
             </button>
           </div>
         )}
