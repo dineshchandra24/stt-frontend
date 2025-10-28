@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Mic, MicOff, Download, Trash2, LogOut, Menu, X, Copy, Check, Lock, Mail, User, Eye, EyeOff, Upload, FileAudio, Play, Pause } from 'lucide-react';
+import { Mic, MicOff, Download, Trash2, LogOut, Menu, X, Copy, Check, Lock, Mail, User, Eye, EyeOff, Upload, FileAudio, Play, Pause, Settings } from 'lucide-react';
 
 const API_BASE_URL = 'https://stt-backend-k837.onrender.com';
 
@@ -28,6 +28,11 @@ export default function EchoScribe() {
   const [successMessage, setSuccessMessage] = useState('');
   const [currentView, setCurrentView] = useState('home');
   const [uploadingFile, setUploadingFile] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [passwordData, setPasswordData] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [passwordError, setPasswordError] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
 
   // Refs
   const mediaStreamRef = useRef(null);
@@ -369,6 +374,50 @@ export default function EchoScribe() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Change password
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    setPasswordError('');
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      setPasswordError('New passwords do not match');
+      return;
+    }
+
+    if (passwordData.newPassword.length < 6) {
+      setPasswordError('Password must be at least 6 characters');
+      return;
+    }
+
+    const token = localStorage.getItem('token');
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          currentPassword: passwordData.currentPassword,
+          newPassword: passwordData.newPassword
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        showSuccess('Password changed successfully');
+        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        setShowSettings(false);
+      } else {
+        setPasswordError(data.error || 'Failed to change password');
+      }
+    } catch (err) {
+      setPasswordError('Server error. Please try again.');
+      console.error('Password change error:', err);
+    }
+  };
+
   // Authentication Screen
   if (!isAuthenticated) {
     return (
@@ -671,97 +720,214 @@ export default function EchoScribe() {
       ) : (
         /* Dashboard View */
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="mb-5 flex justify-between items-center flex-wrap gap-3">
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900">Dashboard</h2>
-              <p className="text-sm text-gray-600">Total recordings: {history.length}</p>
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={downloadPDF}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-xs font-medium"
-              >
-                <Download size={14} /> PDF
-              </button>
-              <button
-                onClick={downloadTxt}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-xs font-medium"
-              >
-                <Download size={14} /> TXT
-              </button>
-              {history.length > 0 && (
-                <button
-                  onClick={clearAllHistory}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-xs font-medium"
-                >
-                  <Trash2 size={14} /> Clear All
-                </button>
-              )}
-            </div>
-          </div>
-
-          {history.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-10 text-center">
-              <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <FileAudio className="w-7 h-7 text-gray-400" />
+          {/* User Profile Card */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 mb-5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center">
+                  <User className="w-7 h-7 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold text-gray-900">{currentUser?.name}</h3>
+                  <p className="text-sm text-gray-600">{currentUser?.email}</p>
+                </div>
               </div>
-              <h3 className="text-base font-semibold text-gray-900 mb-2">No Recordings Yet</h3>
-              <p className="text-sm text-gray-600 mb-4">Start recording to see your transcriptions here</p>
               <button
-                onClick={() => navigateTo('home')}
-                className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors text-sm"
+                onClick={() => setShowSettings(!showSettings)}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors text-sm font-medium text-gray-700"
               >
-                Start Recording
+                <Settings size={14} /> Settings
               </button>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {history.map((item, idx) => (
-                <div
-                  key={item._id}
-                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 bg-blue-100 rounded-md flex items-center justify-center font-semibold text-blue-700 text-xs">
-                        {idx + 1}
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        <p>{new Date(item.createdAt).toLocaleDateString()}</p>
-                        <p>{new Date(item.createdAt).toLocaleTimeString()}</p>
-                      </div>
+
+            {/* Settings Panel */}
+            {showSettings && (
+              <div className="mt-5 pt-5 border-t border-gray-200">
+                <h4 className="text-sm font-semibold text-gray-900 mb-4">Change Password</h4>
+                <form onSubmit={handlePasswordChange} className="space-y-3">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Current Password</label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
+                      <input
+                        type={showCurrentPassword ? 'text' : 'password'}
+                        required
+                        value={passwordData.currentPassword}
+                        onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
+                        className="w-full pl-9 pr-9 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Enter current password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        {showCurrentPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                      </button>
                     </div>
-                    <button
-                      onClick={() => deleteTranscription(item._id)}
-                      className="p-1 text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                      title="Delete"
-                    >
-                      <Trash2 size={14} />
-                    </button>
                   </div>
 
-                  <div className="bg-gray-50 rounded-md p-3 mb-3 max-h-28 overflow-y-auto border border-gray-200">
-                    <p className="text-gray-800 text-xs leading-relaxed">{item.text}</p>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">New Password</label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
+                      <input
+                        type={showNewPassword ? 'text' : 'password'}
+                        required
+                        value={passwordData.newPassword}
+                        onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                        className="w-full pl-9 pr-9 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Enter new password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      >
+                        {showNewPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                      </button>
+                    </div>
                   </div>
+
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Confirm New Password</label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
+                      <input
+                        type="password"
+                        required
+                        value={passwordData.confirmPassword}
+                        onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                        className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Confirm new password"
+                      />
+                    </div>
+                  </div>
+
+                  {passwordError && (
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-md text-xs">
+                      {passwordError}
+                    </div>
+                  )}
 
                   <div className="flex gap-2">
                     <button
-                      onClick={() => copyToClipboard(item.text)}
-                      className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors text-xs font-medium"
+                      type="submit"
+                      className="flex-1 bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm"
                     >
-                      <Copy size={12} /> Copy
+                      Update Password
                     </button>
                     <button
-                      onClick={() => setSelectedItem(item)}
-                      className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-md transition-colors text-xs font-medium"
+                      type="button"
+                      onClick={() => {
+                        setShowSettings(false);
+                        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                        setPasswordError('');
+                      }}
+                      className="flex-1 bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-300 transition-colors text-sm"
                     >
-                      View
+                      Cancel
                     </button>
                   </div>
-                </div>
-              ))}
+                </form>
+              </div>
+            )}
+          </div>
+
+          {/* History Section */}
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+            <div className="mb-5 flex justify-between items-center flex-wrap gap-3">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">History</h2>
+                <p className="text-sm text-gray-600">Total recordings: {history.length}</p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={downloadPDF}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-xs font-medium"
+                >
+                  <Download size={14} /> PDF
+                </button>
+                <button
+                  onClick={downloadTxt}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-xs font-medium"
+                >
+                  <Download size={14} /> TXT
+                </button>
+                {history.length > 0 && (
+                  <button
+                    onClick={clearAllHistory}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-xs font-medium"
+                  >
+                    <Trash2 size={14} /> Clear All
+                  </button>
+                )}
+              </div>
             </div>
-          )}
+
+            {history.length === 0 ? (
+              <div className="text-center py-10">
+                <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <FileAudio className="w-7 h-7 text-gray-400" />
+                </div>
+                <h3 className="text-base font-semibold text-gray-900 mb-2">No Recordings Yet</h3>
+                <p className="text-sm text-gray-600 mb-4">Start recording to see your transcriptions here</p>
+                <button
+                  onClick={() => navigateTo('home')}
+                  className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors text-sm"
+                >
+                  Start Recording
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {history.map((item, idx) => (
+                  <div
+                    key={item._id}
+                    className="bg-gray-50 rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 bg-blue-100 rounded-md flex items-center justify-center font-semibold text-blue-700 text-xs">
+                          {idx + 1}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          <p>{new Date(item.createdAt).toLocaleDateString()}</p>
+                          <p>{new Date(item.createdAt).toLocaleTimeString()}</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => deleteTranscription(item._id)}
+                        className="p-1 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                        title="Delete"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+
+                    <div className="bg-white rounded-md p-3 mb-3 max-h-28 overflow-y-auto border border-gray-200">
+                      <p className="text-gray-800 text-xs leading-relaxed">{item.text}</p>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => copyToClipboard(item.text)}
+                        className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors text-xs font-medium"
+                      >
+                        <Copy size={12} /> Copy
+                      </button>
+                      <button
+                        onClick={() => setSelectedItem(item)}
+                        className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-md transition-colors text-xs font-medium"
+                      >
+                        View
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>}
 
           {/* Modal for viewing full transcription */}
           {selectedItem && (
