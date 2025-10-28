@@ -1,29 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Mic, MicOff, Download, Trash2, LogOut, Menu, X, Copy, Check, Lock, Mail, User, Eye, EyeOff, Upload, FileAudio, Play, Pause, Settings, ChevronDown } from 'lucide-react';
+import { Mic, MicOff, Download, Trash2, LogOut, Menu, X, Copy, Check, Lock, Mail, User, Eye, EyeOff, Upload, FileAudio, ChevronDown } from 'lucide-react';
 
 const API_BASE_URL = 'https://stt-backend-k837.onrender.com';
 
 export default function EchoScribe() {
-  // Auth State
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authMode, setAuthMode] = useState('login');
   const [authData, setAuthData] = useState({ email: '', password: '', name: '' });
   const [authError, setAuthError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const [showSettings, setShowSettings] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   
-  // Recording State
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   
-  // History State
   const [history, setHistory] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   
-  // UI State
   const [copied, setCopied] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -37,14 +33,12 @@ export default function EchoScribe() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showClearAllConfirm, setShowClearAllConfirm] = useState(false);
 
-  // Refs
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const recordingIntervalRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Check authentication on mount
   useEffect(() => {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
@@ -53,9 +47,10 @@ export default function EchoScribe() {
       setCurrentUser(JSON.parse(user));
       loadHistory();
     }
+    setCurrentView('home');
+    window.history.replaceState(null, '', '#home');
   }, []);
 
-  // Handle browser back button
   useEffect(() => {
     const handlePopState = () => {
       const path = window.location.hash.slice(1) || 'home';
@@ -71,7 +66,6 @@ export default function EchoScribe() {
     window.addEventListener('popstate', handlePopState);
     document.addEventListener('mousedown', handleClickOutside);
     
-    // Set initial view from URL
     const path = window.location.hash.slice(1) || 'home';
     setCurrentView(path);
 
@@ -81,14 +75,12 @@ export default function EchoScribe() {
     };
   }, [showDownloadMenu]);
 
-  // Navigate function with history support
   const navigateTo = (view) => {
     setCurrentView(view);
     window.history.pushState(null, '', `#${view}`);
     setMobileMenuOpen(false);
   };
 
-  // Recording timer
   useEffect(() => {
     if (isRecording) {
       recordingIntervalRef.current = setInterval(() => {
@@ -107,20 +99,17 @@ export default function EchoScribe() {
     };
   }, [isRecording]);
 
-  // Format time helper
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Show success message helper
   const showSuccess = (message) => {
     setSuccessMessage(message);
     setTimeout(() => setSuccessMessage(''), 3000);
   };
 
-  // Authentication handler
   const handleAuth = async (e) => {
     e.preventDefault();
     setAuthError('');
@@ -145,6 +134,7 @@ export default function EchoScribe() {
         setIsAuthenticated(true);
         setCurrentUser(data.user);
         setAuthData({ email: '', password: '', name: '' });
+        setShowAuthModal(false);
         loadHistory();
       } else {
         setAuthError(data.error || 'Authentication failed');
@@ -155,7 +145,6 @@ export default function EchoScribe() {
     }
   };
 
-  // Logout handler
   const handleLogout = () => {
     setShowLogoutConfirm(true);
   };
@@ -171,7 +160,6 @@ export default function EchoScribe() {
     setShowLogoutConfirm(false);
   };
 
-  // Load history from API
   const loadHistory = async () => {
     const token = localStorage.getItem('token');
     if (!token) return;
@@ -189,7 +177,6 @@ export default function EchoScribe() {
     }
   };
 
-  // Start recording
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -217,7 +204,6 @@ export default function EchoScribe() {
     }
   };
 
-  // Stop recording
   const stopRecording = () => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
       mediaRecorderRef.current.stop();
@@ -225,7 +211,6 @@ export default function EchoScribe() {
     }
   };
 
-  // Send audio to Deepgram API
   const sendAudioToDeepgram = async (audioBlob) => {
     setIsProcessing(true);
     const token = localStorage.getItem('token');
@@ -255,14 +240,13 @@ export default function EchoScribe() {
     }
   };
 
-  // Handle file upload
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const allowedTypes = ['audio/mpeg', 'audio/wav', 'audio/mp3', 'audio/ogg', 'audio/webm', 'audio/m4a', 'audio/flac'];
     if (!allowedTypes.includes(file.type) && !file.name.match(/\.(mp3|wav|ogg|webm|m4a|flac)$/i)) {
-      alert('Please upload a valid audio file (MP3, WAV, OGG, WEBM, M4A, FLAC)');
+      alert('Please upload a valid audio file');
       return;
     }
 
@@ -279,7 +263,6 @@ export default function EchoScribe() {
     }
   };
 
-  // Save transcription
   const saveTranscription = async () => {
     if (!transcript.trim()) return;
 
@@ -305,7 +288,6 @@ export default function EchoScribe() {
     }
   };
 
-  // Delete transcription
   const deleteTranscription = async (id) => {
     const token = localStorage.getItem('token');
     try {
@@ -324,7 +306,6 @@ export default function EchoScribe() {
     }
   };
 
-  // Download PDF
   const downloadPDF = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -343,7 +324,6 @@ export default function EchoScribe() {
     }
   };
 
-  // Download TXT
   const downloadTxt = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -362,7 +342,6 @@ export default function EchoScribe() {
     }
   };
 
-  // Clear all history
   const clearAllHistory = () => {
     setShowClearAllConfirm(true);
   };
@@ -387,14 +366,12 @@ export default function EchoScribe() {
     }
   };
 
-  // Copy to clipboard
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Change password
   const handlePasswordChange = async (e) => {
     e.preventDefault();
     setPasswordError('');
@@ -428,7 +405,6 @@ export default function EchoScribe() {
       if (response.ok) {
         showSuccess('Password changed successfully');
         setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-        setShowSettings(false);
       } else {
         setPasswordError(data.error || 'Failed to change password');
       }
@@ -438,20 +414,81 @@ export default function EchoScribe() {
     }
   };
 
-  // Authentication Screen
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-14 h-14 bg-blue-600 rounded-lg mb-3 shadow-sm">
-              <Mic className="w-7 h-7 text-white" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">EchoScribe</h1>
-            <p className="text-sm text-gray-600">Professional Speech-to-Text Platform</p>
-          </div>
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {successMessage && (
+        <div className="fixed top-4 right-4 bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-md shadow-md z-50 text-sm">
+          {successMessage}
+        </div>
+      )}
 
-          <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Confirm Logout</h3>
+            <p className="text-sm text-gray-600 mb-5">Are you sure you want to logout?</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showClearAllConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Clear All History</h3>
+            <p className="text-sm text-gray-600 mb-5">Are you sure you want to delete all transcriptions?</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowClearAllConfirm(false)}
+                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmClearAll}
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
+              >
+                Delete All
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAuthModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={() => setShowAuthModal(false)}>
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-start mb-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <Mic className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">Welcome to EchoScribe</h3>
+                  <p className="text-xs text-gray-600">Sign in to access all features</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowAuthModal(false)}
+                className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
             <div className="flex gap-2 mb-5">
               <button
                 onClick={() => { setAuthMode('login'); setAuthError(''); }}
@@ -543,69 +580,10 @@ export default function EchoScribe() {
                 {authMode === 'login' ? 'Sign In' : 'Create Account'}
               </button>
             </form>
-          </div>
 
-          <p className="text-center text-gray-500 text-xs mt-4">
-            Secure authentication • Encrypted data
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // Main Application
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {successMessage && (
-        <div className="fixed top-4 right-4 bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-md shadow-md z-50 text-sm">
-          {successMessage}
-        </div>
-      )}
-
-      {/* Logout Confirmation Modal */}
-      {showLogoutConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Confirm Logout</h3>
-            <p className="text-sm text-gray-600 mb-5">Are you sure you want to logout?</p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowLogoutConfirm(false)}
-                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmLogout}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Clear All Confirmation Modal */}
-      {showClearAllConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Clear All History</h3>
-            <p className="text-sm text-gray-600 mb-5">Are you sure you want to delete all transcriptions? This action cannot be undone.</p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowClearAllConfirm(false)}
-                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmClearAll}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
-              >
-                Delete All
-              </button>
-            </div>
+            <p className="text-center text-gray-500 text-xs mt-4">
+              Secure authentication • Encrypted data
+            </p>
           </div>
         </div>
       )}
@@ -621,37 +599,48 @@ export default function EchoScribe() {
             </div>
             <div>
               <h1 className="text-base font-bold text-gray-900">EchoScribe</h1>
-              <p className="text-xs text-gray-500 hidden sm:block">Welcome, {currentUser?.name}</p>
+              {isAuthenticated && <p className="text-xs text-gray-500 hidden sm:block">Welcome, {currentUser?.name}</p>}
             </div>
           </button>
           
           <div className="hidden md:flex items-center gap-2">
-            <button
-              onClick={() => navigateTo('history')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                currentView === 'history'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <FileAudio size={14} /> History
-            </button>
-            <button
-              onClick={() => navigateTo('profile')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                currentView === 'profile'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <User size={14} /> Profile
-            </button>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-red-600 hover:bg-red-50 rounded-md text-sm font-medium transition-colors"
-            >
-              <LogOut size={14} /> Logout
-            </button>
+            {isAuthenticated ? (
+              <React.Fragment>
+                <button
+                  onClick={() => navigateTo('history')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    currentView === 'history'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <FileAudio size={14} /> History
+                </button>
+                <button
+                  onClick={() => navigateTo('profile')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    currentView === 'profile'
+                      ? 'bg-blue-600 text-white'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <User size={14} /> Profile
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-1.5 px-3 py-1.5 text-red-600 hover:bg-red-50 rounded-md text-sm font-medium transition-colors"
+                >
+                  <LogOut size={14} /> Logout
+                </button>
+              </React.Fragment>
+            ) : (
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm font-medium transition-colors hover:bg-blue-700"
+              >
+                <User size={14} /> Sign In
+              </button>
+            )}
           </div>
 
           <button
@@ -664,38 +653,75 @@ export default function EchoScribe() {
 
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 p-3 bg-white space-y-2">
-            <button 
-              onClick={() => navigateTo('history')}
-              className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
-                currentView === 'history' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-100 text-gray-700'
-              }`}
-            >
-              <FileAudio size={14} /> History
-            </button>
-            <button 
-              onClick={() => navigateTo('profile')}
-              className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
-                currentView === 'profile' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-100 text-gray-700'
-              }`}
-            >
-              <User size={14} /> Profile
-            </button>
-            <button 
-              onClick={handleLogout} 
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-red-50 text-red-600 rounded-md text-sm font-medium"
-            >
-              <LogOut size={14} /> Logout
-            </button>
+            {isAuthenticated ? (
+              <React.Fragment>
+                <button 
+                  onClick={() => navigateTo('history')}
+                  className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
+                    currentView === 'history' 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-gray-100 text-gray-700'
+                  }`}
+                >
+                  <FileAudio size={14} /> History
+                </button>
+                <button 
+                  onClick={() => navigateTo('profile')}
+                  className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
+                    currentView === 'profile' 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-gray-100 text-gray-700'
+                  }`}
+                >
+                  <User size={14} /> Profile
+                </button>
+                <button 
+                  onClick={handleLogout} 
+                  className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-red-50 text-red-600 rounded-md text-sm font-medium"
+                >
+                  <LogOut size={14} /> Logout
+                </button>
+              </React.Fragment>
+            ) : (
+              <button 
+                onClick={() => {
+                  setShowAuthModal(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-md text-sm font-medium"
+              >
+                <User size={14} /> Sign In
+              </button>
+            )}
           </div>
         )}
       </header>
 
       {currentView === 'home' && (
         <div className="max-w-4xl mx-auto px-4 py-6">
+          {!isAuthenticated && (
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg shadow-sm border border-blue-200 p-6 mb-5">
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-14 h-14 bg-blue-600 rounded-lg mb-3 shadow-sm">
+                  <Mic className="w-7 h-7 text-white" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-900 mb-2">Welcome to EchoScribe</h2>
+                <p className="text-sm text-gray-600 mb-4 max-w-md mx-auto">
+                  Transform your voice into text instantly. Sign in to save your transcriptions, access history, and unlock all features.
+                </p>
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium shadow-sm"
+                >
+                  <User size={16} /> Sign In to Get Started
+                </button>
+                <p className="text-xs text-gray-500 mt-3">
+                  Free to use • No credit card required
+                </p>
+              </div>
+            </div>
+          )}
+          
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
             <h2 className="text-lg font-semibold text-gray-900 mb-5">Record Audio</h2>
             
@@ -724,7 +750,6 @@ export default function EchoScribe() {
                 </p>
               </div>
 
-              {/* Upload Audio File - Compact Version */}
               <div className="w-full max-w-xs">
                 <input
                   ref={fileInputRef}
@@ -766,7 +791,15 @@ export default function EchoScribe() {
                     onClick={() => copyToClipboard(transcript)} 
                     className="flex items-center gap-1 px-2.5 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded-md transition-colors font-medium"
                   >
-                    {copied ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy</>}
+                    {copied ? (
+                      <span className="flex items-center gap-1">
+                        <Check size={14} /> Copied
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1">
+                        <Copy size={14} /> Copy
+                      </span>
+                    )}
                   </button>
                 </div>
                 <div className="bg-gray-50 rounded-md p-4 text-gray-800 text-sm leading-relaxed max-h-60 overflow-y-auto border border-gray-200">
@@ -933,7 +966,15 @@ export default function EchoScribe() {
                     onClick={() => copyToClipboard(selectedItem.text)}
                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium text-sm"
                   >
-                    {copied ? <><Check size={16} /> Copied</> : <><Copy size={16} /> Copy</>}
+                    {copied ? (
+                      <span className="flex items-center gap-2">
+                        <Check size={16} /> Copied
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <Copy size={16} /> Copy
+                      </span>
+                    )}
                   </button>
                   <button
                     onClick={() => {
