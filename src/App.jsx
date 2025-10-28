@@ -11,6 +11,7 @@ export default function EchoScribe() {
   const [authError, setAuthError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
   
   // Recording State
   const [isRecording, setIsRecording] = useState(false);
@@ -28,7 +29,6 @@ export default function EchoScribe() {
   const [successMessage, setSuccessMessage] = useState('');
   const [currentView, setCurrentView] = useState('home');
   const [uploadingFile, setUploadingFile] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
   const [passwordData, setPasswordData] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [passwordError, setPasswordError] = useState('');
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
@@ -423,7 +423,6 @@ export default function EchoScribe() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
         <div className="w-full max-w-md">
-          {/* Logo Section */}
           <div className="text-center mb-6">
             <div className="inline-flex items-center justify-center w-14 h-14 bg-blue-600 rounded-lg mb-3 shadow-sm">
               <Mic className="w-7 h-7 text-white" />
@@ -432,9 +431,7 @@ export default function EchoScribe() {
             <p className="text-sm text-gray-600">Professional Speech-to-Text Platform</p>
           </div>
 
-          {/* Auth Card */}
           <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-            {/* Tab Buttons */}
             <div className="flex gap-2 mb-5">
               <button
                 onClick={() => { setAuthMode('login'); setAuthError(''); }}
@@ -458,7 +455,6 @@ export default function EchoScribe() {
               </button>
             </div>
 
-            {/* Auth Form */}
             <form onSubmit={handleAuth} className="space-y-4">
               {authMode === 'signup' && (
                 <div>
@@ -540,14 +536,12 @@ export default function EchoScribe() {
   // Main Application
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Success Message */}
       {successMessage && (
         <div className="fixed top-4 right-4 bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-md shadow-md z-50 text-sm">
           {successMessage}
         </div>
       )}
 
-      {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center">
           <button 
@@ -565,14 +559,24 @@ export default function EchoScribe() {
           
           <div className="hidden md:flex items-center gap-2">
             <button
-              onClick={() => navigateTo('dashboard')}
+              onClick={() => navigateTo('history')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                currentView === 'dashboard'
+                currentView === 'history'
                   ? 'bg-blue-600 text-white'
                   : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
-              <FileAudio size={14} /> Dashboard
+              <FileAudio size={14} /> History
+            </button>
+            <button
+              onClick={() => navigateTo('profile')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                currentView === 'profile'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              <User size={14} /> Profile
             </button>
             <button
               onClick={handleLogout}
@@ -593,14 +597,24 @@ export default function EchoScribe() {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 p-3 bg-white space-y-2">
             <button 
-              onClick={() => navigateTo('dashboard')}
+              onClick={() => navigateTo('history')}
               className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
-                currentView === 'dashboard' 
+                currentView === 'history' 
                   ? 'bg-blue-600 text-white' 
                   : 'bg-gray-100 text-gray-700'
               }`}
             >
-              <FileAudio size={14} /> Dashboard
+              <FileAudio size={14} /> History
+            </button>
+            <button 
+              onClick={() => navigateTo('profile')}
+              className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
+                currentView === 'profile' 
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-gray-100 text-gray-700'
+              }`}
+            >
+              <User size={14} /> Profile
             </button>
             <button 
               onClick={handleLogout} 
@@ -612,13 +626,11 @@ export default function EchoScribe() {
         )}
       </header>
 
-      {/* Home View */}
-      {currentView === 'home' ? (
+      {currentView === 'home' && (
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
             <h2 className="text-lg font-semibold text-gray-900 mb-5">Record Audio</h2>
             
-            {/* Recording Section */}
             <div className="flex flex-col items-center gap-5">
               <div className="relative">
                 <button
@@ -652,7 +664,6 @@ export default function EchoScribe() {
               )}
             </div>
 
-            {/* File Upload Section */}
             <div className="mt-6 pt-5 border-t border-gray-200">
               <h3 className="text-sm font-semibold text-gray-900 mb-3">Upload Audio File</h3>
               <input
@@ -684,7 +695,6 @@ export default function EchoScribe() {
               </label>
             </div>
 
-            {/* Transcription Result */}
             {transcript && (
               <div className="mt-5 pt-5 border-t border-gray-200">
                 <div className="flex justify-between items-center mb-3">
@@ -717,128 +727,14 @@ export default function EchoScribe() {
             )}
           </div>
         </div>
-      ) : (
-        /* Dashboard View */
+      )}
+
+      {currentView === 'history' && (
         <div className="max-w-7xl mx-auto px-4 py-6">
-          {/* User Profile Card */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 mb-5">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center">
-                  <User className="w-7 h-7 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="text-base font-semibold text-gray-900">{currentUser?.name}</h3>
-                  <p className="text-sm text-gray-600">{currentUser?.email}</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowSettings(!showSettings)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors text-sm font-medium text-gray-700"
-              >
-                <Settings size={14} /> Settings
-              </button>
-            </div>
-
-            {/* Settings Panel */}
-            {showSettings && (
-              <div className="mt-5 pt-5 border-t border-gray-200">
-                <h4 className="text-sm font-semibold text-gray-900 mb-4">Change Password</h4>
-                <form onSubmit={handlePasswordChange} className="space-y-3">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">Current Password</label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
-                      <input
-                        type={showCurrentPassword ? 'text' : 'password'}
-                        required
-                        value={passwordData.currentPassword}
-                        onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                        className="w-full pl-9 pr-9 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter current password"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                      >
-                        {showCurrentPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">New Password</label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
-                      <input
-                        type={showNewPassword ? 'text' : 'password'}
-                        required
-                        value={passwordData.newPassword}
-                        onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                        className="w-full pl-9 pr-9 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Enter new password"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowNewPassword(!showNewPassword)}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                      >
-                        {showNewPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">Confirm New Password</label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
-                      <input
-                        type="password"
-                        required
-                        value={passwordData.confirmPassword}
-                        onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                        className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Confirm new password"
-                      />
-                    </div>
-                  </div>
-
-                  {passwordError && (
-                    <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-md text-xs">
-                      {passwordError}
-                    </div>
-                  )}
-
-                  <div className="flex gap-2">
-                    <button
-                      type="submit"
-                      className="flex-1 bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm"
-                    >
-                      Update Password
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowSettings(false);
-                        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-                        setPasswordError('');
-                      }}
-                      className="flex-1 bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-300 transition-colors text-sm"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              </div>
-            )}
-          </div>
-
-          {/* History Section */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
             <div className="mb-5 flex justify-between items-center flex-wrap gap-3">
               <div>
-                <h2 className="text-lg font-semibold text-gray-900">History</h2>
+                <h2 className="text-lg font-semibold text-gray-900">Transcription History</h2>
                 <p className="text-sm text-gray-600">Total recordings: {history.length}</p>
               </div>
               <div className="flex gap-2">
@@ -927,9 +823,8 @@ export default function EchoScribe() {
                 ))}
               </div>
             )}
-          </div>}
+          </div>
 
-          {/* Modal for viewing full transcription */}
           {selectedItem && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={() => setSelectedItem(null)}>
               <div className="bg-white rounded-lg shadow-xl p-5 max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
@@ -972,6 +867,112 @@ export default function EchoScribe() {
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {currentView === 'profile' && (
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 mb-5">
+            <h2 className="text-lg font-semibold text-gray-900 mb-5">Profile Settings</h2>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                <User className="w-8 h-8 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">{currentUser?.name}</h3>
+                <p className="text-sm text-gray-600">{currentUser?.email}</p>
+              </div>
+            </div>
+
+            <div className="pt-5 border-t border-gray-200">
+              <h4 className="text-sm font-semibold text-gray-900 mb-4">Change Password</h4>
+              <form onSubmit={handlePasswordChange} className="space-y-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Current Password</label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
+                    <input
+                      type={showCurrentPassword ? 'text' : 'password'}
+                      required
+                      value={passwordData.currentPassword}
+                      onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
+                      className="w-full pl-9 pr-9 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter current password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showCurrentPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">New Password</label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
+                    <input
+                      type={showNewPassword ? 'text' : 'password'}
+                      required
+                      value={passwordData.newPassword}
+                      onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                      className="w-full pl-9 pr-9 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter new password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showNewPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Confirm New Password</label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
+                    <input
+                      type="password"
+                      required
+                      value={passwordData.confirmPassword}
+                      onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                      className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Confirm new password"
+                    />
+                  </div>
+                </div>
+
+                {passwordError && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-md text-xs">
+                    {passwordError}
+                  </div>
+                )}
+
+                <div className="flex gap-2">
+                  <button
+                    type="submit"
+                    className="flex-1 bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm"
+                  >
+                    Update Password
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                      setPasswordError('');
+                    }}
+                    className="flex-1 bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-300 transition-colors text-sm"
+                  >
+                    Clear
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       )}
     </div>
