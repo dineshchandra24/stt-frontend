@@ -1145,9 +1145,19 @@ export default function EchoScribe() {
             <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-8">Profile Settings</h2>
             
             <div className="flex items-center gap-5 mb-8 pb-8 border-b border-purple-500/20">
-              <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl shadow-purple-500/30">
-                <User className="w-10 h-10 text-white" />
-              </div>
+              {currentUser?.profilePhoto ? (
+                <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-xl shadow-purple-500/30 border-2 border-purple-500/30">
+                  <img 
+                    src={currentUser.profilePhoto} 
+                    alt={currentUser?.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl shadow-purple-500/30">
+                  <User className="w-10 h-10 text-white" />
+                </div>
+              )}
               <div>
                 <h3 className="text-xl font-bold text-white mb-1">{currentUser?.name}</h3>
                 <p className="text-sm text-slate-400">{currentUser?.email}</p>
