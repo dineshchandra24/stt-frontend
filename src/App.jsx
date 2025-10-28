@@ -610,8 +610,8 @@ export default function EchoScribe() {
         </div>
       )}
 
-      <header className="bg-slate-900/80 backdrop-blur-xl border-b border-purple-500/20 sticky top-0 z-40 shadow-lg shadow-purple-500/10">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <header className="bg-slate-900/40 backdrop-blur-xl border-b border-purple-500/10 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
           <button 
             onClick={() => navigateTo('home')}
             className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer group"
@@ -674,7 +674,7 @@ export default function EchoScribe() {
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-purple-500/20 p-4 bg-slate-900/95 backdrop-blur-xl space-y-2">
+          <div className="md:hidden border-t border-purple-500/10 p-4 bg-slate-900/60 backdrop-blur-xl space-y-2">
             {isAuthenticated ? (
               <React.Fragment>
                 <button 
@@ -1316,6 +1316,87 @@ export default function EchoScribe() {
         </div>
       )}
 
+      {showFooterModal === 'support' && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowFooterModal(null)}>
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-start mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                  <Info className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white">Help & Support</h3>
+              </div>
+              <button
+                onClick={() => setShowFooterModal(null)}
+                className="p-2 hover:bg-slate-800 rounded-xl transition-all duration-300 text-slate-400 hover:text-white"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="space-y-6 text-slate-300 text-sm">
+              <p className="text-base">Need help? We're here to assist you with any questions or issues.</p>
+              
+              <div className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-xl p-5">
+                <h4 className="text-lg font-semibold text-white mb-3">📚 Knowledge Base</h4>
+                <p className="mb-3">Find answers to common questions and learn how to get the most out of EchoScribe.</p>
+                <button 
+                  onClick={() => setShowFooterModal('faq')}
+                  className="text-blue-400 hover:text-blue-300 font-semibold text-sm transition-colors"
+                >
+                  Browse FAQ →
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                  <h4 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
+                    <FileAudio className="w-4 h-4 text-purple-400" />
+                    Getting Started
+                  </h4>
+                  <p className="text-xs text-slate-400">Learn the basics of using EchoScribe for transcription.</p>
+                </div>
+                
+                <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                  <h4 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-emerald-400" />
+                    Account & Security
+                  </h4>
+                  <p className="text-xs text-slate-400">Manage your account settings and security preferences.</p>
+                </div>
+                
+                <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                  <h4 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
+                    <Upload className="w-4 h-4 text-orange-400" />
+                    File Uploads
+                  </h4>
+                  <p className="text-xs text-slate-400">Supported formats, file size limits, and upload tips.</p>
+                </div>
+                
+                <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                  <h4 className="text-base font-semibold text-white mb-2 flex items-center gap-2">
+                    <Download className="w-4 h-4 text-blue-400" />
+                    Exports & Downloads
+                  </h4>
+                  <p className="text-xs text-slate-400">Download your transcriptions in PDF or TXT format.</p>
+                </div>
+              </div>
+              
+              <div className="pt-4 border-t border-slate-700">
+                <h4 className="text-base font-semibold text-white mb-3">Still need help?</h4>
+                <p className="text-slate-400 mb-3">Can't find what you're looking for? Our support team is ready to help.</p>
+                <button 
+                  onClick={() => setShowFooterModal('contact')}
+                  className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white rounded-xl transition-all duration-300 text-sm font-semibold shadow-lg shadow-blue-500/30"
+                >
+                  Contact Support Team
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showFooterModal === 'contact' && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowFooterModal(null)}>
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
@@ -1442,9 +1523,9 @@ export default function EchoScribe() {
       )}
 
       {/* Footer */}
-      <footer className="bg-slate-900/80 backdrop-blur-xl border-t border-purple-500/20 mt-auto relative z-10">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+      <footer className="bg-slate-900/40 backdrop-blur-xl border-t border-purple-500/10 mt-auto relative z-10">
+        <div className="max-w-7xl mx-auto px-4 py-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-5">
             {/* Brand Section */}
             <div>
               <div className="flex items-center gap-3 mb-3">
@@ -1473,12 +1554,7 @@ export default function EchoScribe() {
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => navigateTo('home')} className="text-slate-400 hover:text-purple-400 text-xs transition-colors">
-                    Features
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => setShowFooterModal('contact')} className="text-slate-400 hover:text-purple-400 text-xs transition-colors">
+                  <button onClick={() => setShowFooterModal('support')} className="text-slate-400 hover:text-purple-400 text-xs transition-colors">
                     Support
                   </button>
                 </li>
@@ -1509,7 +1585,7 @@ export default function EchoScribe() {
           </div>
 
           {/* Bottom Bar */}
-          <div className="pt-4 border-t border-purple-500/20 flex flex-col md:flex-row justify-between items-center gap-3">
+          <div className="pt-3 border-t border-purple-500/10 flex flex-col md:flex-row justify-between items-center gap-3">
             <p className="text-slate-500 text-xs">
               © 2025 EchoScribe. All rights reserved.
             </p>
