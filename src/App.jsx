@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Mic, MicOff, Download, Trash2, LogOut, Menu, X, Copy, Check, Lock, Mail, User, Eye, EyeOff, Upload, FileAudio, Play, Pause, Settings } from 'lucide-react';
+import { Mic, MicOff, Download, Trash2, LogOut, Menu, X, Copy, Check, Lock, Mail, User, Eye, EyeOff, Upload, FileAudio, Play, Pause, Settings, ChevronDown } from 'lucide-react';
 
 const API_BASE_URL = 'https://stt-backend-k837.onrender.com';
 
@@ -33,6 +33,7 @@ export default function EchoScribe() {
   const [passwordError, setPasswordError] = useState('');
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showDownloadMenu, setShowDownloadMenu] = useState(false);
 
   // Refs
   const mediaStreamRef = useRef(null);
@@ -59,14 +60,24 @@ export default function EchoScribe() {
       setCurrentView(path);
     };
 
+    const handleClickOutside = (e) => {
+      if (showDownloadMenu && !e.target.closest('.download-menu-container')) {
+        setShowDownloadMenu(false);
+      }
+    };
+
     window.addEventListener('popstate', handlePopState);
+    document.addEventListener('mousedown', handleClickOutside);
     
     // Set initial view from URL
     const path = window.location.hash.slice(1) || 'home';
     setCurrentView(path);
 
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDownloadMenu]);
 
   // Navigate function with history support
   const navigateTo = (view) => {
@@ -144,6 +155,8 @@ export default function EchoScribe() {
 
   // Logout handler
   const handleLogout = () => {
+    if (!window.confirm('Are you sure you want to logout?')) return;
+    
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setIsAuthenticated(false);
@@ -348,7 +361,7 @@ export default function EchoScribe() {
 
   // Clear all history
   const clearAllHistory = async () => {
-    if (!window.confirm('Delete all transcriptions? This cannot be undone.')) return;
+    if (!window.confirm('Are you sure you want to delete all transcriptions? This action cannot be undone.')) return;
 
     const token = localStorage.getItem('token');
     try {
@@ -738,18 +751,36 @@ export default function EchoScribe() {
                 <p className="text-sm text-gray-600">Total recordings: {history.length}</p>
               </div>
               <div className="flex gap-2">
-                <button
-                  onClick={downloadPDF}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-xs font-medium"
-                >
-                  <Download size={14} /> PDF
-                </button>
-                <button
-                  onClick={downloadTxt}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-xs font-medium"
-                >
-                  <Download size={14} /> TXT
-                </button>
+                <div className="relative download-menu-container">
+                  <button
+                    onClick={() => setShowDownloadMenu(!showDownloadMenu)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-xs font-medium"
+                  >
+                    <Download size={14} /> Download <ChevronDown size={14} />
+                  </button>
+                  {showDownloadMenu && (
+                    <div className="absolute right-0 mt-1 w-32 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                      <button
+                        onClick={() => {
+                          downloadPDF();
+                          setShowDownloadMenu(false);
+                        }}
+                        className="w-full text-left px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100 rounded-t-md transition-colors flex items-center gap-2"
+                      >
+                        <Download size={12} /> PDF Format
+                      </button>
+                      <button
+                        onClick={() => {
+                          downloadTxt();
+                          setShowDownloadMenu(false);
+                        }}
+                        className="w-full text-left px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100 rounded-b-md transition-colors flex items-center gap-2"
+                      >
+                        <Download size={12} /> TXT Format
+                      </button>
+                    </div>
+                  )}
+                </div>
                 {history.length > 0 && (
                   <button
                     onClick={clearAllHistory}
