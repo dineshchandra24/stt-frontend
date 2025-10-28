@@ -34,6 +34,8 @@ export default function EchoScribe() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showClearAllConfirm, setShowClearAllConfirm] = useState(false);
 
   // Refs
   const mediaStreamRef = useRef(null);
@@ -155,8 +157,10 @@ export default function EchoScribe() {
 
   // Logout handler
   const handleLogout = () => {
-    if (!window.confirm('Are you sure you want to logout?')) return;
-    
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setIsAuthenticated(false);
@@ -164,6 +168,7 @@ export default function EchoScribe() {
     setHistory([]);
     setTranscript('');
     setSelectedItem(null);
+    setShowLogoutConfirm(false);
   };
 
   // Load history from API
@@ -302,8 +307,6 @@ export default function EchoScribe() {
 
   // Delete transcription
   const deleteTranscription = async (id) => {
-    if (!window.confirm('Delete this transcription?')) return;
-    
     const token = localStorage.getItem('token');
     try {
       const response = await fetch(`${API_BASE_URL}/api/history/${id}`, {
@@ -360,9 +363,11 @@ export default function EchoScribe() {
   };
 
   // Clear all history
-  const clearAllHistory = async () => {
-    if (!window.confirm('Are you sure you want to delete all transcriptions? This action cannot be undone.')) return;
+  const clearAllHistory = () => {
+    setShowClearAllConfirm(true);
+  };
 
+  const confirmClearAll = async () => {
     const token = localStorage.getItem('token');
     try {
       const response = await fetch(`${API_BASE_URL}/api/history`, {
@@ -374,9 +379,11 @@ export default function EchoScribe() {
         loadHistory();
         setSelectedItem(null);
         showSuccess('All transcriptions deleted');
+        setShowClearAllConfirm(false);
       }
     } catch (err) {
       console.error('Error clearing history:', err);
+      setShowClearAllConfirm(false);
     }
   };
 
@@ -552,6 +559,54 @@ export default function EchoScribe() {
       {successMessage && (
         <div className="fixed top-4 right-4 bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-md shadow-md z-50 text-sm">
           {successMessage}
+        </div>
+      )}
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Confirm Logout</h3>
+            <p className="text-sm text-gray-600 mb-5">Are you sure you want to logout?</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmLogout}
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Clear All Confirmation Modal */}
+      {showClearAllConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Clear All History</h3>
+            <p className="text-sm text-gray-600 mb-5">Are you sure you want to delete all transcriptions? This action cannot be undone.</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowClearAllConfirm(false)}
+                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmClearAll}
+                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
+              >
+                Delete All
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
