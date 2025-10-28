@@ -215,7 +215,8 @@ export default function EchoScribe() {
 
   const handleGoogleLogin = async () => {
     try {
-      // Open Google OAuth popup
+      setAuthError('');
+      
       const width = 500;
       const height = 600;
       const left = window.screenX + (window.outerWidth - width) / 2;
@@ -227,37 +228,32 @@ export default function EchoScribe() {
         `width=${width},height=${height},left=${left},top=${top}`
       );
 
-      // Poll for popup closure and check for token
-      const pollTimer = setInterval(async () => {
-        if (popup.closed) {
-          clearInterval(pollTimer);
-          // Check if token was set
-          const token = localStorage.getItem('token');
-          const user = localStorage.getItem('user');
-          if (token && user) {
-            setIsAuthenticated(true);
-            setCurrentUser(JSON.parse(user));
-            setShowAuthModal(false);
-            loadHistory();
-          }
-        }
-      }, 500);
+      if (!popup) {
+        setAuthError('Popup blocked. Please allow popups for this site.');
+        return;
+      }
 
-      // Listen for message from popup (alternative method)
+      // Handle message from popup
       const messageHandler = (event) => {
-        // Accept messages from the backend domain
-        if (event.origin !== API_BASE_URL && !event.origin.includes('onrender.com')) return;
+        // Verify origin for security
+        const allowedOrigins = [
+          API_BASE_URL,
+          'https://stt-backend-k837.onrender.com',
+          'http://localhost:5000'
+        ];
         
-        if (event.data.token) {
+        if (!allowedOrigins.some(origin => event.origin.includes(origin.replace('https://', '').replace('http://', '')))) {
+          return;
+        }
+        
+        if (event.data && event.data.token) {
           localStorage.setItem('token', event.data.token);
           localStorage.setItem('user', JSON.stringify(event.data.user));
           setIsAuthenticated(true);
           setCurrentUser(event.data.user);
           setShowAuthModal(false);
           loadHistory();
-          if (popup && !popup.closed) {
-            popup.close();
-          }
+          showSuccess('Successfully signed in with Google!');
           window.removeEventListener('message', messageHandler);
           clearInterval(pollTimer);
         }
@@ -265,13 +261,30 @@ export default function EchoScribe() {
 
       window.addEventListener('message', messageHandler);
 
-      // Cleanup on unmount or timeout
+      // Poll for popup closure
+      const pollTimer = setInterval(() => {
+        if (popup.closed) {
+          clearInterval(pollTimer);
+          window.removeEventListener('message', messageHandler);
+          
+          // Check if authentication succeeded
+          const token = localStorage.getItem('token');
+          if (!token) {
+            setAuthError('Google sign-in was cancelled or failed. Please try again.');
+          }
+        }
+      }, 500);
+
+      // Timeout after 5 minutes
       setTimeout(() => {
         window.removeEventListener('message', messageHandler);
         clearInterval(pollTimer);
-      }, 300000); // 5 minutes timeout
+        if (popup && !popup.closed) {
+          popup.close();
+        }
+      }, 300000);
     } catch (err) {
-      setAuthError('Google sign-in failed. Please try again.');
+      setAuthError('Google sign-in failed. Please try email/password or phone authentication.');
       console.error('Google auth error:', err);
     }
   };
