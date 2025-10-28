@@ -227,9 +227,26 @@ export default function EchoScribe() {
         `width=${width},height=${height},left=${left},top=${top}`
       );
 
-      // Listen for message from popup
-      window.addEventListener('message', async (event) => {
-        if (event.origin !== API_BASE_URL) return;
+      // Poll for popup closure and check for token
+      const pollTimer = setInterval(async () => {
+        if (popup.closed) {
+          clearInterval(pollTimer);
+          // Check if token was set
+          const token = localStorage.getItem('token');
+          const user = localStorage.getItem('user');
+          if (token && user) {
+            setIsAuthenticated(true);
+            setCurrentUser(JSON.parse(user));
+            setShowAuthModal(false);
+            loadHistory();
+          }
+        }
+      }, 500);
+
+      // Listen for message from popup (alternative method)
+      const messageHandler = (event) => {
+        // Accept messages from the backend domain
+        if (event.origin !== API_BASE_URL && !event.origin.includes('onrender.com')) return;
         
         if (event.data.token) {
           localStorage.setItem('token', event.data.token);
@@ -238,9 +255,21 @@ export default function EchoScribe() {
           setCurrentUser(event.data.user);
           setShowAuthModal(false);
           loadHistory();
-          popup.close();
+          if (popup && !popup.closed) {
+            popup.close();
+          }
+          window.removeEventListener('message', messageHandler);
+          clearInterval(pollTimer);
         }
-      });
+      };
+
+      window.addEventListener('message', messageHandler);
+
+      // Cleanup on unmount or timeout
+      setTimeout(() => {
+        window.removeEventListener('message', messageHandler);
+        clearInterval(pollTimer);
+      }, 300000); // 5 minutes timeout
     } catch (err) {
       setAuthError('Google sign-in failed. Please try again.');
       console.error('Google auth error:', err);
