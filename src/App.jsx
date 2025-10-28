@@ -1310,6 +1310,7 @@ export default function EchoScribe() {
               <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-xl p-4 mt-6">
                 <p className="text-center text-white font-semibold">Transform Your Voice Into Magical Text</p>
                 <p className="text-center text-slate-400 text-xs mt-1">Powered by AI • Built with ❤️</p>
+                <p className="text-center text-slate-500 text-xs mt-2">Made by Dinesh Chandra Mishra</p>
               </div>
             </div>
           </div>
