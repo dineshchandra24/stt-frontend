@@ -35,6 +35,9 @@ export default function EchoScribe() {
   const [displayedText, setDisplayedText] = useState('');
   const [showFooterModal, setShowFooterModal] = useState(null);
   const [authLoading, setAuthLoading] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [captchaQuestion, setCaptchaQuestion] = useState({ num1: 0, num2: 0 });
+  const [captchaAnswer, setCaptchaAnswer] = useState('');
 
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -44,7 +47,16 @@ export default function EchoScribe() {
 
   useEffect(() => {
     setDisplayedText("Transform Your Voice Into Magical Text");
+    generateCaptcha();
   }, []);
+
+  const generateCaptcha = () => {
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 10) + 1;
+    setCaptchaQuestion({ num1, num2 });
+    setCaptchaAnswer('');
+    setCaptchaVerified(false);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -120,6 +132,12 @@ export default function EchoScribe() {
   const handleAuth = async (e) => {
     e.preventDefault();
     setAuthError('');
+
+    if (!captchaVerified) {
+      setAuthError('Please verify you are not a robot');
+      return;
+    }
+
     setAuthLoading(true);
 
     const endpoint = authMode === 'login' ? '/api/auth/login' : '/api/auth/signup';
@@ -143,6 +161,7 @@ export default function EchoScribe() {
         setCurrentUser(data.user);
         setAuthData({ email: '', password: '', name: '' });
         setShowAuthModal(false);
+        generateCaptcha();
         loadHistory();
       } else {
         setAuthError(data.error || 'Authentication failed');
