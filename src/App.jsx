@@ -34,6 +34,7 @@ export default function EchoScribe() {
   const [showClearAllConfirm, setShowClearAllConfirm] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
   const [showFooterModal, setShowFooterModal] = useState(null);
+  const [authLoading, setAuthLoading] = useState(false);
 
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -119,6 +120,7 @@ export default function EchoScribe() {
   const handleAuth = async (e) => {
     e.preventDefault();
     setAuthError('');
+    setAuthLoading(true);
 
     const endpoint = authMode === 'login' ? '/api/auth/login' : '/api/auth/signup';
     const payload = authMode === 'login' 
@@ -148,6 +150,8 @@ export default function EchoScribe() {
     } catch (err) {
       setAuthError('Server error. Please try again.');
       console.error('Auth error:', err);
+    } finally {
+      setAuthLoading(false);
     }
   };
 
@@ -654,9 +658,17 @@ export default function EchoScribe() {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm shadow-lg shadow-purple-500/30"
+                disabled={authLoading}
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm shadow-lg shadow-purple-500/30 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                {authMode === 'login' ? 'Sign In' : 'Create Account'}
+                {authLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>{authMode === 'login' ? 'Signing In...' : 'Creating Account...'}</span>
+                  </>
+                ) : (
+                  <span>{authMode === 'login' ? 'Sign In' : 'Create Account'}</span>
+                )}
               </button>
             </form>
 
@@ -1639,7 +1651,7 @@ export default function EchoScribe() {
 
       {/* Footer */}
       <footer className="bg-slate-900/40 backdrop-blur-xl border-t border-purple-500/10 mt-auto relative z-10">
-        <div className="max-w-7xl mx-auto px-4 py-5">
+        <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-5">
             {/* Brand Section */}
             <div>
