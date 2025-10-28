@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Mic, MicOff, Download, Trash2, LogOut, Menu, X, Copy, Check, Lock, Mail, User, Eye, EyeOff, Upload, FileAudio, ChevronDown } from 'lucide-react';
+import { Mic, MicOff, Download, Trash2, LogOut, Menu, X, Copy, Check, Lock, Mail, User, Eye, EyeOff, Upload, FileAudio, ChevronDown, Sparkles } from 'lucide-react';
 
 const API_BASE_URL = 'https://stt-backend-k837.onrender.com';
 
@@ -32,12 +32,17 @@ export default function EchoScribe() {
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showClearAllConfirm, setShowClearAllConfirm] = useState(false);
+  const [displayedText, setDisplayedText] = useState('');
 
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const recordingIntervalRef = useRef(null);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    setDisplayedText("Transform Your Voice Into Magical Text");
+  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -415,28 +420,41 @@ export default function EchoScribe() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+      </div>
+
       {successMessage && (
-        <div className="fixed top-4 right-4 bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-md shadow-md z-50 text-sm">
-          {successMessage}
+        <div className="fixed top-6 right-6 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-2xl shadow-2xl z-50 text-sm font-medium backdrop-blur-sm animate-in slide-in-from-top">
+          <div className="flex items-center gap-2">
+            <Check className="w-4 h-4" />
+            {successMessage}
+          </div>
         </div>
       )}
 
       {showLogoutConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Confirm Logout</h3>
-            <p className="text-sm text-gray-600 mb-5">Are you sure you want to logout?</p>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in">
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/20 rounded-3xl shadow-2xl p-8 max-w-sm w-full animate-in zoom-in">
+            <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <LogOut className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2 text-center">Confirm Logout</h3>
+            <p className="text-sm text-slate-400 mb-6 text-center">Are you sure you want to logout?</p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowLogoutConfirm(false)}
-                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium"
+                className="flex-1 px-4 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl transition-all duration-300 text-sm font-semibold border border-slate-700"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmLogout}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
+                className="flex-1 px-4 py-3 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-xl transition-all duration-300 text-sm font-semibold shadow-lg shadow-red-500/30"
               >
                 Logout
               </button>
@@ -446,20 +464,23 @@ export default function EchoScribe() {
       )}
 
       {showClearAllConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Clear All History</h3>
-            <p className="text-sm text-gray-600 mb-5">Are you sure you want to delete all transcriptions?</p>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in">
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/20 rounded-3xl shadow-2xl p-8 max-w-sm w-full animate-in zoom-in">
+            <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Trash2 className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2 text-center">Clear All History</h3>
+            <p className="text-sm text-slate-400 mb-6 text-center">This action cannot be undone. All transcriptions will be permanently deleted.</p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowClearAllConfirm(false)}
-                className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors text-sm font-medium"
+                className="flex-1 px-4 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl transition-all duration-300 text-sm font-semibold border border-slate-700"
               >
                 Cancel
               </button>
               <button
                 onClick={confirmClearAll}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm font-medium"
+                className="flex-1 px-4 py-3 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white rounded-xl transition-all duration-300 text-sm font-semibold shadow-lg shadow-orange-500/30"
               >
                 Delete All
               </button>
@@ -469,43 +490,43 @@ export default function EchoScribe() {
       )}
 
       {showAuthModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={() => setShowAuthModal(false)}>
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-start mb-5">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <Mic className="w-5 h-5 text-white" />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowAuthModal(false)}>
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/20 rounded-3xl shadow-2xl p-8 max-w-md w-full animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-start mb-6">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/30">
+                  <Mic className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">Welcome to EchoScribe</h3>
-                  <p className="text-xs text-gray-600">Sign in to access all features</p>
+                  <h3 className="text-xl font-bold text-white">Welcome to EchoScribe</h3>
+                  <p className="text-xs text-slate-400">Sign in to access all features</p>
                 </div>
               </div>
               <button
                 onClick={() => setShowAuthModal(false)}
-                className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
+                className="p-2 hover:bg-slate-800 rounded-xl transition-all duration-300 text-slate-400 hover:text-white"
               >
-                <X size={18} />
+                <X size={20} />
               </button>
             </div>
 
-            <div className="flex gap-2 mb-5">
+            <div className="flex gap-2 mb-6 bg-slate-800/50 p-1 rounded-2xl">
               <button
                 onClick={() => { setAuthMode('login'); setAuthError(''); }}
-                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                className={`flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 ${
                   authMode === 'login'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/30'
+                    : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Login
               </button>
               <button
                 onClick={() => { setAuthMode('signup'); setAuthError(''); }}
-                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                className={`flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-300 ${
                   authMode === 'signup'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/30'
+                    : 'text-slate-400 hover:text-white'
                 }`}
               >
                 Sign Up
@@ -515,15 +536,15 @@ export default function EchoScribe() {
             <form onSubmit={handleAuth} className="space-y-4">
               {authMode === 'signup' && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Full Name</label>
+                  <label className="block text-xs font-semibold text-slate-300 mb-2">Full Name</label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                    <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={18} />
                     <input
                       type="text"
                       required
                       value={authData.name}
                       onChange={(e) => setAuthData({ ...authData, name: e.target.value })}
-                      className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full pl-12 pr-4 py-3 text-sm bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
                       placeholder="John Doe"
                     />
                   </div>
@@ -531,75 +552,75 @@ export default function EchoScribe() {
               )}
 
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Email Address</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-2">Email Address</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={18} />
                   <input
                     type="email"
                     required
                     value={authData.email}
                     onChange={(e) => setAuthData({ ...authData, email: e.target.value })}
-                    className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-12 pr-4 py-3 text-sm bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
                     placeholder="you@example.com"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Password</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-2">Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={18} />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
                     value={authData.password}
                     onChange={(e) => setAuthData({ ...authData, password: e.target.value })}
-                    className="w-full pl-9 pr-9 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full pl-12 pr-12 py-3 text-sm bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
                     placeholder="••••••••"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
                   >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
               </div>
 
               {authError && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-md text-xs">
+                <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-xs font-medium">
                   {authError}
                 </div>
               )}
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm"
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm shadow-lg shadow-purple-500/30"
               >
                 {authMode === 'login' ? 'Sign In' : 'Create Account'}
               </button>
             </form>
 
-            <p className="text-center text-gray-500 text-xs mt-4">
-              Secure authentication • Encrypted data
+            <p className="text-center text-slate-500 text-xs mt-6 flex items-center justify-center gap-2">
+              <Lock size={12} /> Secure authentication • Encrypted data
             </p>
           </div>
         </div>
       )}
 
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center">
+      <header className="bg-slate-900/80 backdrop-blur-xl border-b border-purple-500/20 sticky top-0 z-40 shadow-lg shadow-purple-500/10">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <button 
             onClick={() => navigateTo('home')}
-            className="flex items-center gap-2.5 hover:opacity-80 transition-opacity cursor-pointer"
+            className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer group"
           >
-            <div className="bg-blue-600 w-8 h-8 rounded-lg flex items-center justify-center">
-              <Mic className="w-4 h-4 text-white" />
+            <div className="bg-gradient-to-br from-purple-500 to-pink-600 w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/30 group-hover:shadow-purple-500/50 transition-all duration-300">
+              <Mic className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-base font-bold text-gray-900">EchoScribe</h1>
-              {isAuthenticated && <p className="text-xs text-gray-500 hidden sm:block">Welcome, {currentUser?.name}</p>}
+              <h1 className="text-lg font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">EchoScribe</h1>
+              {isAuthenticated && <p className="text-xs text-slate-400 hidden sm:block">Welcome, {currentUser?.name}</p>}
             </div>
           </button>
           
@@ -608,78 +629,78 @@ export default function EchoScribe() {
               <React.Fragment>
                 <button
                   onClick={() => navigateTo('history')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
                     currentView === 'history'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/30'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800'
                   }`}
                 >
-                  <FileAudio size={14} /> History
+                  <FileAudio size={16} /> History
                 </button>
                 <button
                   onClick={() => navigateTo('profile')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
                     currentView === 'profile'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/30'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800'
                   }`}
                 >
-                  <User size={14} /> Profile
+                  <User size={16} /> Profile
                 </button>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-red-600 hover:bg-red-50 rounded-md text-sm font-medium transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 text-red-400 hover:text-red-300 hover:bg-red-950/50 rounded-xl text-sm font-semibold transition-all duration-300"
                 >
-                  <LogOut size={14} /> Logout
+                  <LogOut size={16} /> Logout
                 </button>
               </React.Fragment>
             ) : (
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm font-medium transition-colors hover:bg-blue-700"
+                className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg shadow-purple-500/30"
               >
-                <User size={14} /> Sign In
+                <User size={16} /> Sign In
               </button>
             )}
           </div>
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 hover:bg-gray-100 rounded-md"
+            className="md:hidden p-2.5 hover:bg-slate-800 rounded-xl transition-all duration-300 text-slate-300"
           >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 p-3 bg-white space-y-2">
+          <div className="md:hidden border-t border-purple-500/20 p-4 bg-slate-900/95 backdrop-blur-xl space-y-2">
             {isAuthenticated ? (
               <React.Fragment>
                 <button 
                   onClick={() => navigateTo('history')}
-                  className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
+                  className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
                     currentView === 'history' 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-gray-100 text-gray-700'
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/30' 
+                      : 'bg-slate-800 text-slate-300 hover:text-white'
                   }`}
                 >
-                  <FileAudio size={14} /> History
+                  <FileAudio size={16} /> History
                 </button>
                 <button 
                   onClick={() => navigateTo('profile')}
-                  className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
+                  className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
                     currentView === 'profile' 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-gray-100 text-gray-700'
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/30' 
+                      : 'bg-slate-800 text-slate-300 hover:text-white'
                   }`}
                 >
-                  <User size={14} /> Profile
+                  <User size={16} /> Profile
                 </button>
                 <button 
                   onClick={handleLogout} 
-                  className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-red-50 text-red-600 rounded-md text-sm font-medium"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-950/50 text-red-400 hover:text-red-300 rounded-xl text-sm font-semibold transition-all duration-300"
                 >
-                  <LogOut size={14} /> Logout
+                  <LogOut size={16} /> Logout
                 </button>
               </React.Fragment>
             ) : (
@@ -688,9 +709,9 @@ export default function EchoScribe() {
                   setShowAuthModal(true);
                   setMobileMenuOpen(false);
                 }}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-blue-600 text-white rounded-md text-sm font-medium"
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-xl text-sm font-semibold shadow-lg shadow-purple-500/30"
               >
-                <User size={14} /> Sign In
+                <User size={16} /> Sign In
               </button>
             )}
           </div>
@@ -698,58 +719,70 @@ export default function EchoScribe() {
       </header>
 
       {currentView === 'home' && (
-        <div className="max-w-4xl mx-auto px-4 py-6">
+        <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
           {!isAuthenticated && (
-            <div className="bg-blue-50 rounded-lg border border-blue-200 p-3 mb-4">
-              <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <User className="w-4 h-4 text-white" />
+            <div className="bg-gradient-to-r from-purple-900/40 to-pink-900/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 p-4 mb-6 shadow-lg shadow-purple-500/10">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-purple-500/30">
+                    <Sparkles className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <p className="text-xs font-medium text-gray-900">Welcome to EchoScribe</p>
-                    <p className="text-xs text-gray-600">Sign in to save transcriptions</p>
+                    <p className="text-sm font-semibold text-white">Welcome to EchoScribe</p>
+                    <p className="text-xs text-slate-300">Sign in to save and manage your transcriptions</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setShowAuthModal(true)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-xs font-medium flex-shrink-0"
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-xl transition-all duration-300 text-xs font-semibold flex-shrink-0 shadow-lg shadow-purple-500/30"
                 >
-                  <User size={12} /> Sign In
+                  <User size={14} /> Sign In
                 </button>
               </div>
             </div>
           )}
           
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
-            <h2 className="text-lg font-semibold text-gray-900 mb-5">Record Audio</h2>
+          <div className="bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-purple-500/20 p-8 shadow-2xl shadow-purple-500/10">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-2">
+                {displayedText}
+              </h2>
+              <p className="text-slate-400 text-sm">Click the button below to start recording</p>
+            </div>
             
-            <div className="flex flex-col items-center gap-5">
+            <div className="flex flex-col items-center gap-6">
               <div className="relative">
+                {isRecording && (
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-red-500 to-pink-500 animate-ping opacity-30"></div>
+                )}
                 <button
                   onClick={isRecording ? stopRecording : startRecording}
                   disabled={isProcessing || uploadingFile}
-                  className={`w-20 h-20 rounded-full flex items-center justify-center transition-all shadow-md ${
+                  className={`relative w-24 h-24 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed ${
                     isRecording 
-                      ? 'bg-red-600 hover:bg-red-700' 
-                      : 'bg-blue-600 hover:bg-blue-700'
-                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                      ? 'bg-gradient-to-br from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 shadow-red-500/50' 
+                      : 'bg-gradient-to-br from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 shadow-purple-500/50'
+                  }`}
                 >
-                  {isRecording ? <MicOff className="w-8 h-8 text-white" /> : <Mic className="w-8 h-8 text-white" />}
+                  {isRecording ? <MicOff className="w-10 h-10 text-white" /> : <Mic className="w-10 h-10 text-white" />}
                 </button>
               </div>
 
               <div className="text-center">
-                <p className="text-base font-medium text-gray-900 mb-1">
-                  {isRecording ? 'Recording...' : 'Ready to Record'}
+                <p className="text-lg font-semibold text-white mb-1">
+                  {isRecording ? 'Recording in Progress...' : 'Ready to Record'}
                 </p>
-                {isRecording && <p className="text-xl font-mono text-red-600">{formatTime(recordingTime)}</p>}
-                <p className="text-xs text-gray-600 mt-1">
-                  {isRecording ? 'Click to stop recording' : 'Click the microphone to start'}
+                {isRecording && (
+                  <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 backdrop-blur-sm border border-red-500/30 rounded-xl px-4 py-2 mb-2">
+                    <p className="text-2xl font-mono text-red-400 font-bold">{formatTime(recordingTime)}</p>
+                  </div>
+                )}
+                <p className="text-xs text-slate-400">
+                  {isRecording ? 'Click to stop and transcribe' : 'Press the microphone to start'}
                 </p>
               </div>
 
-              <div className="w-full max-w-xs">
+              <div className="w-full max-w-sm">
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -761,59 +794,66 @@ export default function EchoScribe() {
                 />
                 <label
                   htmlFor="audio-upload"
-                  className={`flex items-center justify-center gap-2 px-4 py-2 border border-green-300 bg-green-50 rounded-md transition-colors cursor-pointer ${
+                  className={`flex items-center justify-center gap-3 px-6 py-3 border-2 border-emerald-500/30 bg-gradient-to-r from-emerald-900/40 to-teal-900/40 backdrop-blur-sm rounded-xl transition-all duration-300 cursor-pointer shadow-lg shadow-emerald-500/10 ${
                     uploadingFile || isProcessing || isRecording
                       ? 'opacity-50 cursor-not-allowed'
-                      : 'hover:bg-green-100 hover:border-green-400'
+                      : 'hover:border-emerald-500/50 hover:shadow-emerald-500/20'
                   }`}
                 >
-                  <Upload className="w-4 h-4 text-green-600" />
-                  <span className="text-xs font-medium text-green-700">
-                    {uploadingFile ? 'Uploading...' : 'Upload Audio File'}
+                  <Upload className="w-5 h-5 text-emerald-400" />
+                  <span className="text-sm font-semibold text-emerald-300">
+                    {uploadingFile ? 'Uploading Audio...' : 'Upload Audio File'}
                   </span>
                 </label>
               </div>
 
               {isProcessing && (
-                <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-md border border-blue-200">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
-                  <p className="text-blue-700 text-sm font-medium">Processing audio...</p>
+                <div className="flex items-center gap-3 bg-gradient-to-r from-blue-900/40 to-purple-900/40 backdrop-blur-sm px-6 py-3 rounded-xl border border-blue-500/30 shadow-lg shadow-blue-500/20">
+                  <div className="flex gap-1">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                    <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                  </div>
+                  <p className="text-blue-300 text-sm font-semibold">Processing your audio...</p>
                 </div>
               )}
             </div>
 
             {transcript && (
-              <div className="mt-5 pt-5 border-t border-gray-200">
-                <div className="flex justify-between items-center mb-3">
-                  <h3 className="text-sm font-semibold text-gray-900">Transcription</h3>
+              <div className="mt-8 pt-8 border-t border-purple-500/20">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                    <Sparkles className="w-5 h-5 text-purple-400" />
+                    Your Transcription
+                  </h3>
                   <button 
                     onClick={() => copyToClipboard(transcript)} 
-                    className="flex items-center gap-1 px-2.5 py-1.5 text-xs bg-gray-100 hover:bg-gray-200 rounded-md transition-colors font-medium"
+                    className="flex items-center gap-2 px-4 py-2 text-sm bg-slate-800 hover:bg-slate-700 rounded-xl transition-all duration-300 font-semibold text-slate-300 hover:text-white border border-slate-700"
                   >
                     {copied ? (
-                      <span className="flex items-center gap-1">
-                        <Check size={14} /> Copied
+                      <span className="flex items-center gap-2">
+                        <Check size={16} className="text-emerald-400" /> Copied!
                       </span>
                     ) : (
-                      <span className="flex items-center gap-1">
-                        <Copy size={14} /> Copy
+                      <span className="flex items-center gap-2">
+                        <Copy size={16} /> Copy
                       </span>
                     )}
                   </button>
                 </div>
-                <div className="bg-gray-50 rounded-md p-4 text-gray-800 text-sm leading-relaxed max-h-60 overflow-y-auto border border-gray-200">
+                <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-5 text-slate-200 text-sm leading-relaxed max-h-64 overflow-y-auto border border-purple-500/20 shadow-inner">
                   {transcript}
                 </div>
-                <div className="flex gap-2 mt-3">
+                <div className="flex gap-3 mt-4">
                   <button 
                     onClick={saveTranscription} 
-                    className="flex-1 bg-green-600 text-white font-medium py-2 px-4 rounded-md hover:bg-green-700 transition-colors text-sm"
+                    className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm shadow-lg shadow-emerald-500/30"
                   >
-                    Save
+                    Save Transcription
                   </button>
                   <button 
                     onClick={() => setTranscript('')} 
-                    className="flex-1 bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-300 transition-colors text-sm"
+                    className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm border border-slate-700"
                   >
                     Clear
                   </button>
@@ -825,40 +865,40 @@ export default function EchoScribe() {
       )}
 
       {currentView === 'history' && (
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
-            <div className="mb-5 flex justify-between items-center flex-wrap gap-3">
+        <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
+          <div className="bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-purple-500/20 p-8 shadow-2xl shadow-purple-500/10">
+            <div className="mb-8 flex justify-between items-center flex-wrap gap-4">
               <div>
-                <h2 className="text-lg font-semibold text-gray-900">Transcription History</h2>
-                <p className="text-sm text-gray-600">Total recordings: {history.length}</p>
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-1">Transcription History</h2>
+                <p className="text-sm text-slate-400">You have {history.length} saved recordings</p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 <div className="relative download-menu-container">
                   <button
                     onClick={() => setShowDownloadMenu(!showDownloadMenu)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-xs font-medium"
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl transition-all duration-300 text-sm font-semibold shadow-lg shadow-blue-500/30"
                   >
-                    <Download size={14} /> Download <ChevronDown size={14} />
+                    <Download size={16} /> Download <ChevronDown size={16} />
                   </button>
                   {showDownloadMenu && (
-                    <div className="absolute right-0 mt-1 w-32 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                    <div className="absolute right-0 mt-2 w-40 bg-slate-800 rounded-xl shadow-2xl border border-purple-500/30 z-10 overflow-hidden">
                       <button
                         onClick={() => {
                           downloadPDF();
                           setShowDownloadMenu(false);
                         }}
-                        className="w-full text-left px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100 rounded-t-md transition-colors flex items-center gap-2"
+                        className="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition-all duration-300 flex items-center gap-2"
                       >
-                        <Download size={12} /> PDF Format
+                        <Download size={14} /> PDF Format
                       </button>
                       <button
                         onClick={() => {
                           downloadTxt();
                           setShowDownloadMenu(false);
                         }}
-                        className="w-full text-left px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100 rounded-b-md transition-colors flex items-center gap-2"
+                        className="w-full text-left px-4 py-3 text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition-all duration-300 flex items-center gap-2"
                       >
-                        <Download size={12} /> TXT Format
+                        <Download size={14} /> TXT Format
                       </button>
                     </div>
                   )}
@@ -866,70 +906,70 @@ export default function EchoScribe() {
                 {history.length > 0 && (
                   <button
                     onClick={clearAllHistory}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-xs font-medium"
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white rounded-xl transition-all duration-300 text-sm font-semibold shadow-lg shadow-orange-500/30"
                   >
-                    <Trash2 size={14} /> Clear All
+                    <Trash2 size={16} /> Clear All
                   </button>
                 )}
               </div>
             </div>
 
             {history.length === 0 ? (
-              <div className="text-center py-10">
-                <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <FileAudio className="w-7 h-7 text-gray-400" />
+              <div className="text-center py-16">
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <FileAudio className="w-10 h-10 text-purple-400" />
                 </div>
-                <h3 className="text-base font-semibold text-gray-900 mb-2">No Recordings Yet</h3>
-                <p className="text-sm text-gray-600 mb-4">Start recording to see your transcriptions here</p>
+                <h3 className="text-xl font-bold text-white mb-2">No Recordings Yet</h3>
+                <p className="text-sm text-slate-400 mb-6">Start recording to see your transcriptions here</p>
                 <button
                   onClick={() => navigateTo('home')}
-                  className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors text-sm"
+                  className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold rounded-xl transition-all duration-300 text-sm shadow-lg shadow-purple-500/30"
                 >
-                  Start Recording
+                  Start Recording Now
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {history.map((item, idx) => (
                   <div
                     key={item._id}
-                    className="bg-gray-50 rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow"
+                    className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl border border-purple-500/20 p-5 hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 hover:border-purple-500/40"
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 bg-blue-100 rounded-md flex items-center justify-center font-semibold text-blue-700 text-xs">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center font-bold text-white text-sm shadow-lg shadow-purple-500/30">
                           {idx + 1}
                         </div>
-                        <div className="text-xs text-gray-500">
-                          <p>{new Date(item.createdAt).toLocaleDateString()}</p>
+                        <div className="text-xs text-slate-400">
+                          <p className="font-semibold">{new Date(item.createdAt).toLocaleDateString()}</p>
                           <p>{new Date(item.createdAt).toLocaleTimeString()}</p>
                         </div>
                       </div>
                       <button
                         onClick={() => deleteTranscription(item._id)}
-                        className="p-1 text-red-600 hover:bg-red-50 rounded-md transition-colors"
+                        className="p-2 text-red-400 hover:text-red-300 hover:bg-red-950/50 rounded-xl transition-all duration-300"
                         title="Delete"
                       >
-                        <Trash2 size={14} />
+                        <Trash2 size={16} />
                       </button>
                     </div>
 
-                    <div className="bg-white rounded-md p-3 mb-3 max-h-28 overflow-y-auto border border-gray-200">
-                      <p className="text-gray-800 text-xs leading-relaxed">{item.text}</p>
+                    <div className="bg-slate-900/50 rounded-xl p-4 mb-4 max-h-32 overflow-y-auto border border-slate-700">
+                      <p className="text-slate-300 text-xs leading-relaxed">{item.text}</p>
                     </div>
 
                     <div className="flex gap-2">
                       <button
                         onClick={() => copyToClipboard(item.text)}
-                        className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors text-xs font-medium"
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl transition-all duration-300 text-xs font-semibold border border-slate-700"
                       >
-                        <Copy size={12} /> Copy
+                        <Copy size={14} /> Copy
                       </button>
                       <button
                         onClick={() => setSelectedItem(item)}
-                        className="flex-1 flex items-center justify-center gap-1 px-2 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-md transition-colors text-xs font-medium"
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 text-purple-300 hover:text-purple-200 rounded-xl transition-all duration-300 text-xs font-semibold border border-purple-500/30"
                       >
-                        View
+                        View Full
                       </button>
                     </div>
                   </div>
@@ -939,39 +979,42 @@ export default function EchoScribe() {
           </div>
 
           {selectedItem && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" onClick={() => setSelectedItem(null)}>
-              <div className="bg-white rounded-lg shadow-xl p-5 max-w-2xl w-full" onClick={(e) => e.stopPropagation()}>
-                <div className="flex justify-between items-start mb-4">
+            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setSelectedItem(null)}>
+              <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
+                <div className="flex justify-between items-start mb-6">
                   <div>
-                    <h3 className="text-base font-semibold text-gray-900 mb-1">Full Transcription</h3>
-                    <p className="text-xs text-gray-600">
+                    <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-purple-400" />
+                      Full Transcription
+                    </h3>
+                    <p className="text-sm text-slate-400">
                       {new Date(selectedItem.createdAt).toLocaleDateString()} • {new Date(selectedItem.createdAt).toLocaleTimeString()}
                     </p>
                   </div>
                   <button
                     onClick={() => setSelectedItem(null)}
-                    className="p-1.5 hover:bg-gray-100 rounded-md transition-colors"
+                    className="p-2 hover:bg-slate-800 rounded-xl transition-all duration-300 text-slate-400 hover:text-white"
                   >
-                    <X size={18} />
+                    <X size={20} />
                   </button>
                 </div>
 
-                <div className="bg-gray-50 rounded-md p-4 text-gray-800 text-sm leading-relaxed max-h-96 overflow-y-auto border border-gray-200 mb-4">
+                <div className="bg-slate-900/50 rounded-2xl p-6 text-slate-200 text-sm leading-relaxed max-h-96 overflow-y-auto border border-purple-500/20 mb-6 shadow-inner">
                   {selectedItem.text}
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <button
                     onClick={() => copyToClipboard(selectedItem.text)}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium text-sm"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl transition-all duration-300 font-semibold text-sm shadow-lg shadow-blue-500/30"
                   >
                     {copied ? (
                       <span className="flex items-center gap-2">
-                        <Check size={16} /> Copied
+                        <Check size={18} /> Copied!
                       </span>
                     ) : (
                       <span className="flex items-center gap-2">
-                        <Copy size={16} /> Copy
+                        <Copy size={18} /> Copy Text
                       </span>
                     )}
                   </button>
@@ -980,9 +1023,9 @@ export default function EchoScribe() {
                       deleteTranscription(selectedItem._id);
                       setSelectedItem(null);
                     }}
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors font-medium text-sm"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-xl transition-all duration-300 font-semibold text-sm shadow-lg shadow-red-500/30"
                   >
-                    <Trash2 size={16} /> Delete
+                    <Trash2 size={18} /> Delete
                   </button>
                 </div>
               </div>
@@ -992,91 +1035,95 @@ export default function EchoScribe() {
       )}
 
       {currentView === 'profile' && (
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-5 mb-5">
-            <h2 className="text-lg font-semibold text-gray-900 mb-5">Profile Settings</h2>
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                <User className="w-8 h-8 text-blue-600" />
+        <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
+          <div className="bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-purple-500/20 p-8 shadow-2xl shadow-purple-500/10">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-8">Profile Settings</h2>
+            
+            <div className="flex items-center gap-5 mb-8 pb-8 border-b border-purple-500/20">
+              <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl shadow-purple-500/30">
+                <User className="w-10 h-10 text-white" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">{currentUser?.name}</h3>
-                <p className="text-sm text-gray-600">{currentUser?.email}</p>
+                <h3 className="text-xl font-bold text-white mb-1">{currentUser?.name}</h3>
+                <p className="text-sm text-slate-400">{currentUser?.email}</p>
               </div>
             </div>
 
-            <div className="pt-5 border-t border-gray-200">
-              <h4 className="text-sm font-semibold text-gray-900 mb-4">Change Password</h4>
-              <form onSubmit={handlePasswordChange} className="space-y-3">
+            <div>
+              <h4 className="text-lg font-bold text-white mb-5 flex items-center gap-2">
+                <Lock className="w-5 h-5 text-purple-400" />
+                Change Password
+              </h4>
+              <form onSubmit={handlePasswordChange} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Current Password</label>
+                  <label className="block text-xs font-semibold text-slate-300 mb-2">Current Password</label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
+                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={18} />
                     <input
                       type={showCurrentPassword ? 'text' : 'password'}
                       required
                       value={passwordData.currentPassword}
                       onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                      className="w-full pl-9 pr-9 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full pl-12 pr-12 py-3 text-sm bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
                       placeholder="Enter current password"
                     />
                     <button
                       type="button"
                       onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
                     >
-                      {showCurrentPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                      {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">New Password</label>
+                  <label className="block text-xs font-semibold text-slate-300 mb-2">New Password</label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
+                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={18} />
                     <input
                       type={showNewPassword ? 'text' : 'password'}
                       required
                       value={passwordData.newPassword}
                       onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                      className="w-full pl-9 pr-9 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full pl-12 pr-12 py-3 text-sm bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
                       placeholder="Enter new password"
                     />
                     <button
                       type="button"
                       onClick={() => setShowNewPassword(!showNewPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
                     >
-                      {showNewPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                      {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Confirm New Password</label>
+                  <label className="block text-xs font-semibold text-slate-300 mb-2">Confirm New Password</label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} />
+                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={18} />
                     <input
                       type="password"
                       required
                       value={passwordData.confirmPassword}
                       onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                      className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full pl-12 pr-4 py-3 text-sm bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
                       placeholder="Confirm new password"
                     />
                   </div>
                 </div>
 
                 {passwordError && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-md text-xs">
+                  <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-xs font-medium">
                     {passwordError}
                   </div>
                 )}
 
-                <div className="flex gap-2">
+                <div className="flex gap-3 pt-2">
                   <button
                     type="submit"
-                    className="flex-1 bg-blue-600 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-700 transition-colors text-sm"
+                    className="flex-1 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm shadow-lg shadow-purple-500/30"
                   >
                     Update Password
                   </button>
@@ -1086,9 +1133,9 @@ export default function EchoScribe() {
                       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
                       setPasswordError('');
                     }}
-                    className="flex-1 bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md hover:bg-gray-300 transition-colors text-sm"
+                    className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm border border-slate-700"
                   >
-                    Clear
+                    Clear Form
                   </button>
                 </div>
               </form>
