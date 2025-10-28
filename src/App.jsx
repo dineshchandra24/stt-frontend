@@ -675,6 +675,46 @@ export default function EchoScribe() {
                 </div>
               )}
 
+              {/* CAPTCHA Verification */}
+              <div className="bg-gradient-to-r from-slate-800/50 to-slate-700/50 border border-slate-600 rounded-xl p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-xs font-semibold text-slate-300 flex items-center gap-2">
+                    <Shield className="w-4 h-4 text-blue-400" />
+                    Verify you're not a robot
+                  </label>
+                  <button
+                    type="button"
+                    onClick={generateCaptcha}
+                    className="text-xs text-purple-400 hover:text-purple-300 font-semibold transition-colors"
+                  >
+                    Refresh
+                  </button>
+                </div>
+                <div className="bg-slate-900/50 rounded-lg p-3 mb-3 border border-slate-700">
+                  <p className="text-sm text-white font-mono text-center">
+                    {captchaQuestion.num1} + {captchaQuestion.num2} = ?
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={captchaAnswer}
+                    onChange={(e) => {
+                      setCaptchaAnswer(e.target.value);
+                      const answer = parseInt(e.target.value);
+                      setCaptchaVerified(answer === captchaQuestion.num1 + captchaQuestion.num2);
+                    }}
+                    className="flex-1 px-4 py-2 text-sm bg-slate-800/50 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
+                    placeholder="Enter answer"
+                  />
+                  {captchaVerified && (
+                    <div className="flex items-center justify-center w-10 h-10 bg-emerald-500/20 border border-emerald-500/30 rounded-lg">
+                      <Check className="w-5 h-5 text-emerald-400" />
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <button
                 type="submit"
                 disabled={authLoading}
@@ -691,12 +731,52 @@ export default function EchoScribe() {
               </button>
             </form>
 
+            {/* CAPTCHA Verification */}
+            <div className="bg-gradient-to-r from-slate-800/50 to-slate-700/50 border border-slate-600 rounded-xl p-4 mt-4">
+              <div className="flex items-center justify-between mb-3">
+                <label className="text-xs font-semibold text-slate-300 flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-blue-400" />
+                  Verify you're not a robot
+                </label>
+                <button
+                  type="button"
+                  onClick={generateCaptcha}
+                  className="text-xs text-purple-400 hover:text-purple-300 font-semibold transition-colors"
+                >
+                  Refresh
+                </button>
+              </div>
+              <div className="bg-slate-900/50 rounded-lg p-3 mb-3 border border-slate-700">
+                <p className="text-sm text-white font-mono text-center">
+                  {captchaQuestion.num1} + {captchaQuestion.num2} = ?
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={captchaAnswer}
+                  onChange={(e) => {
+                    setCaptchaAnswer(e.target.value);
+                    const answer = parseInt(e.target.value);
+                    setCaptchaVerified(answer === captchaQuestion.num1 + captchaQuestion.num2);
+                  }}
+                  className="flex-1 px-4 py-2 text-sm bg-slate-800/50 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
+                  placeholder="Enter answer"
+                />
+                {captchaVerified && (
+                  <div className="flex items-center justify-center w-10 h-10 bg-emerald-500/20 border border-emerald-500/30 rounded-lg">
+                    <Check className="w-5 h-5 text-emerald-400" />
+                  </div>
+                )}
+              </div>
+            </div>
+
             <div className="text-center mt-4">
               {authMode === 'login' ? (
                 <p className="text-xs text-slate-400">
                   New User?{' '}
                   <button
-                    onClick={() => { setAuthMode('signup'); setAuthError(''); }}
+                    onClick={() => { setAuthMode('signup'); setAuthError(''); generateCaptcha(); }}
                     className="text-purple-400 hover:text-purple-300 font-semibold transition-colors"
                   >
                     Signup Now
@@ -706,7 +786,7 @@ export default function EchoScribe() {
                 <p className="text-xs text-slate-400">
                   Already have an account?{' '}
                   <button
-                    onClick={() => { setAuthMode('login'); setAuthError(''); }}
+                    onClick={() => { setAuthMode('login'); setAuthError(''); generateCaptcha(); }}
                     className="text-purple-400 hover:text-purple-300 font-semibold transition-colors"
                   >
                     Login
