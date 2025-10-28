@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Mic, MicOff, Download, Trash2, LogOut, Menu, X, Copy, Check, Lock, Mail, User, Eye, EyeOff, Upload, FileAudio, ChevronDown, Sparkles } from 'lucide-react';
+import { Mic, MicOff, Download, Trash2, LogOut, Menu, X, Copy, Check, Lock, Mail, User, Eye, EyeOff, Upload, FileAudio, ChevronDown, Sparkles, Shield, Info, Send, Github, Twitter, Linkedin } from 'lucide-react';
 
 const API_BASE_URL = 'https://stt-backend-k837.onrender.com';
 
@@ -33,6 +33,7 @@ export default function EchoScribe() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showClearAllConfirm, setShowClearAllConfirm] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
+  const [showFooterModal, setShowFooterModal] = useState(null);
 
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -1143,6 +1144,387 @@ export default function EchoScribe() {
           </div>
         </div>
       )}
+      
+      {/* Footer Modals */}
+      {showFooterModal === 'terms' && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowFooterModal(null)}>
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-start mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/30">
+                  <Shield className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white">Terms of Use</h3>
+              </div>
+              <button
+                onClick={() => setShowFooterModal(null)}
+                className="p-2 hover:bg-slate-800 rounded-xl transition-all duration-300 text-slate-400 hover:text-white"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="space-y-4 text-slate-300 text-sm leading-relaxed">
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">1. Acceptance of Terms</h4>
+                <p>By accessing and using EchoScribe, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use our service.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">2. Service Description</h4>
+                <p>EchoScribe provides voice-to-text transcription services. We use advanced AI technology to convert your audio recordings into text format.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">3. User Responsibilities</h4>
+                <p>You are responsible for maintaining the confidentiality of your account credentials. You agree not to use the service for any unlawful purposes or to upload content that infringes on others' rights.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">4. Privacy & Data</h4>
+                <p>We respect your privacy. Your audio recordings and transcriptions are stored securely and are only accessible by you. We do not share your data with third parties without your consent.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">5. Service Limitations</h4>
+                <p>While we strive for accuracy, transcription results may vary based on audio quality, accents, and background noise. We do not guarantee 100% accuracy.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">6. Modifications</h4>
+                <p>We reserve the right to modify these terms at any time. Continued use of the service constitutes acceptance of any changes.</p>
+              </div>
+              
+              <p className="text-xs text-slate-500 pt-4 border-t border-slate-700">Last updated: October 2025</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showFooterModal === 'privacy' && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowFooterModal(null)}>
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-start mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/30">
+                  <Lock className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white">Privacy Policy</h3>
+              </div>
+              <button
+                onClick={() => setShowFooterModal(null)}
+                className="p-2 hover:bg-slate-800 rounded-xl transition-all duration-300 text-slate-400 hover:text-white"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="space-y-4 text-slate-300 text-sm leading-relaxed">
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Information We Collect</h4>
+                <p>We collect information you provide directly, including your name, email address, and the audio recordings you upload for transcription.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">How We Use Your Information</h4>
+                <p>Your information is used to provide and improve our transcription services, maintain your account, and communicate with you about service updates.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Data Security</h4>
+                <p>We implement industry-standard security measures to protect your data. All communications are encrypted, and your recordings are stored securely on our servers.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Data Retention</h4>
+                <p>Your transcriptions are stored until you choose to delete them. You have full control over your data and can delete any transcription at any time.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Third-Party Services</h4>
+                <p>We use Deepgram API for transcription services. Your audio data is processed through their secure servers. We do not sell or share your personal information with advertisers.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Your Rights</h4>
+                <p>You have the right to access, modify, or delete your personal data at any time through your profile settings.</p>
+              </div>
+              
+              <p className="text-xs text-slate-500 pt-4 border-t border-slate-700">Last updated: October 2025</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showFooterModal === 'about' && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowFooterModal(null)}>
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-start mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                  <Info className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white">About EchoScribe</h3>
+              </div>
+              <button
+                onClick={() => setShowFooterModal(null)}
+                className="p-2 hover:bg-slate-800 rounded-xl transition-all duration-300 text-slate-400 hover:text-white"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="space-y-4 text-slate-300 text-sm leading-relaxed">
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Our Mission</h4>
+                <p>EchoScribe is dedicated to making voice transcription accessible, accurate, and effortless. We believe in the power of AI to transform how people capture and preserve their spoken words.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">What We Offer</h4>
+                <p>Our platform provides high-quality speech-to-text transcription powered by advanced AI technology. Whether you're recording meetings, interviews, lectures, or personal notes, EchoScribe delivers accurate transcriptions in seconds.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Key Features</h4>
+                <ul className="list-disc list-inside space-y-1 ml-2">
+                  <li>Real-time voice recording and transcription</li>
+                  <li>Audio file upload support (MP3, WAV, OGG, M4A, FLAC)</li>
+                  <li>Secure cloud storage for your transcriptions</li>
+                  <li>Download transcriptions as PDF or TXT</li>
+                  <li>User-friendly interface with modern design</li>
+                  <li>Cross-device compatibility</li>
+                </ul>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Technology</h4>
+                <p>We leverage cutting-edge AI transcription technology to ensure high accuracy across various accents, languages, and audio qualities. Our infrastructure is built for speed, reliability, and security.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Our Commitment</h4>
+                <p>We're committed to protecting your privacy, maintaining the highest security standards, and continuously improving our service based on user feedback.</p>
+              </div>
+              
+              <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-xl p-4 mt-6">
+                <p className="text-center text-white font-semibold">Transform Your Voice Into Magical Text</p>
+                <p className="text-center text-slate-400 text-xs mt-1">Powered by AI • Built with ❤️</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showFooterModal === 'contact' && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowFooterModal(null)}>
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-start mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-pink-500/30">
+                  <Send className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white">Contact Us</h3>
+              </div>
+              <button
+                onClick={() => setShowFooterModal(null)}
+                className="p-2 hover:bg-slate-800 rounded-xl transition-all duration-300 text-slate-400 hover:text-white"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="space-y-6 text-slate-300 text-sm">
+              <p>We'd love to hear from you! Whether you have questions, feedback, or need support, feel free to reach out.</p>
+              
+              <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-xl p-5">
+                <h4 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <Mail className="w-5 h-5 text-purple-400" />
+                  Email Support
+                </h4>
+                <a 
+                  href="mailto:dcm77040@gmail.com"
+                  className="text-purple-400 hover:text-purple-300 font-semibold text-base transition-colors flex items-center gap-2"
+                >
+                  dcm77040@gmail.com
+                </a>
+                <p className="text-xs text-slate-400 mt-2">We typically respond within 24-48 hours</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-3">Get Support For:</h4>
+                <ul className="space-y-2 ml-2">
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400 mt-1">•</span>
+                    <span>Technical issues or bugs</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400 mt-1">•</span>
+                    <span>Account and billing questions</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400 mt-1">•</span>
+                    <span>Feature requests and suggestions</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400 mt-1">•</span>
+                    <span>General inquiries about EchoScribe</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400 mt-1">•</span>
+                    <span>Partnership opportunities</span>
+                  </li>
+                </ul>
+              </div>
+              
+
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showFooterModal === 'faq' && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowFooterModal(null)}>
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-start mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/30">
+                  <Info className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-white">FAQ</h3>
+              </div>
+              <button
+                onClick={() => setShowFooterModal(null)}
+                className="p-2 hover:bg-slate-800 rounded-xl transition-all duration-300 text-slate-400 hover:text-white"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
+            <div className="space-y-5 text-slate-300 text-sm">
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <h4 className="text-base font-semibold text-white mb-2">What audio formats are supported?</h4>
+                <p>EchoScribe supports MP3, WAV, OGG, WEBM, M4A, and FLAC audio formats. Maximum file size is 25MB.</p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <h4 className="text-base font-semibold text-white mb-2">How accurate is the transcription?</h4>
+                <p>Our AI-powered transcription typically achieves 90-95% accuracy depending on audio quality, clarity, and accent. Clear audio with minimal background noise produces the best results.</p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <h4 className="text-base font-semibold text-white mb-2">Is my data secure?</h4>
+                <p>Yes! All data is encrypted in transit and at rest. Your recordings and transcriptions are private and only accessible by you.</p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <h4 className="text-base font-semibold text-white mb-2">Can I download my transcriptions?</h4>
+                <p>Absolutely! You can download your transcriptions in both PDF and TXT formats from the History page.</p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <h4 className="text-base font-semibold text-white mb-2">How long are transcriptions stored?</h4>
+                <p>Your transcriptions are stored indefinitely until you choose to delete them. You have full control over your data.</p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <h4 className="text-base font-semibold text-white mb-2">Can I use EchoScribe offline?</h4>
+                <p>Currently, EchoScribe requires an internet connection for transcription as we use cloud-based AI processing for the best accuracy.</p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <h4 className="text-base font-semibold text-white mb-2">What languages are supported?</h4>
+                <p>EchoScribe currently supports English transcription. We're working on adding more languages in future updates.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Footer */}
+      <footer className="bg-slate-900/80 backdrop-blur-xl border-t border-purple-500/20 mt-auto relative z-10">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+            {/* Brand Section */}
+            <div>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="bg-gradient-to-br from-purple-500 to-pink-600 w-9 h-9 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/30">
+                  <Mic className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">EchoScribe</h3>
+              </div>
+              <p className="text-slate-400 text-xs max-w-xs">
+                Transform your voice into magical text with our AI-powered transcription service. Fast, accurate, and secure.
+              </p>
+            </div>
+
+            {/* Quick Links */}
+            <div>
+              <h4 className="text-white font-semibold mb-3 text-sm">Quick Links</h4>
+              <ul className="space-y-2">
+                <li>
+                  <button onClick={() => setShowFooterModal('about')} className="text-slate-400 hover:text-purple-400 text-xs transition-colors">
+                    About Us
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setShowFooterModal('faq')} className="text-slate-400 hover:text-purple-400 text-xs transition-colors">
+                    FAQ
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => navigateTo('home')} className="text-slate-400 hover:text-purple-400 text-xs transition-colors">
+                    Features
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setShowFooterModal('contact')} className="text-slate-400 hover:text-purple-400 text-xs transition-colors">
+                    Support
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <h4 className="text-white font-semibold mb-3 text-sm">Legal</h4>
+              <ul className="space-y-2">
+                <li>
+                  <button onClick={() => setShowFooterModal('terms')} className="text-slate-400 hover:text-purple-400 text-xs transition-colors">
+                    Terms of Use
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setShowFooterModal('privacy')} className="text-slate-400 hover:text-purple-400 text-xs transition-colors">
+                    Privacy Policy
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setShowFooterModal('contact')} className="text-slate-400 hover:text-purple-400 text-xs transition-colors">
+                    Contact Us
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="pt-4 border-t border-purple-500/20 flex flex-col md:flex-row justify-between items-center gap-3">
+            <p className="text-slate-500 text-xs">
+              © 2025 EchoScribe. All rights reserved.
+            </p>
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <Lock className="w-3 h-3" />
+              <span>Secure & Encrypted</span>
+              <span className="mx-2">•</span>
+              <Mail className="w-3 h-3" />
+              <a href="mailto:dcm77040@gmail.com" className="hover:text-purple-400 transition-colors">
+                dcm77040@gmail.com
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
