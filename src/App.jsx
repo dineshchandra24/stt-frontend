@@ -724,43 +724,38 @@ export default function EchoScribe() {
                 </p>
               </div>
 
+              {/* Upload Audio File - Compact Version */}
+              <div className="w-full max-w-xs">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="audio/*,.mp3,.wav,.ogg,.webm,.m4a,.flac"
+                  onChange={handleFileUpload}
+                  disabled={uploadingFile || isProcessing || isRecording}
+                  className="hidden"
+                  id="audio-upload"
+                />
+                <label
+                  htmlFor="audio-upload"
+                  className={`flex items-center justify-center gap-2 px-4 py-2 border border-green-300 bg-green-50 rounded-md transition-colors cursor-pointer ${
+                    uploadingFile || isProcessing || isRecording
+                      ? 'opacity-50 cursor-not-allowed'
+                      : 'hover:bg-green-100 hover:border-green-400'
+                  }`}
+                >
+                  <Upload className="w-4 h-4 text-green-600" />
+                  <span className="text-xs font-medium text-green-700">
+                    {uploadingFile ? 'Uploading...' : 'Upload Audio File'}
+                  </span>
+                </label>
+              </div>
+
               {isProcessing && (
                 <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-md border border-blue-200">
                   <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
                   <p className="text-blue-700 text-sm font-medium">Processing audio...</p>
                 </div>
               )}
-            </div>
-
-            <div className="mt-6 pt-5 border-t border-gray-200">
-              <h3 className="text-sm font-semibold text-gray-900 mb-3">Upload Audio File</h3>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="audio/*,.mp3,.wav,.ogg,.webm,.m4a,.flac"
-                onChange={handleFileUpload}
-                disabled={uploadingFile || isProcessing || isRecording}
-                className="hidden"
-                id="audio-upload"
-              />
-              <label
-                htmlFor="audio-upload"
-                className={`flex flex-col items-center justify-center gap-2 p-5 border-2 border-dashed rounded-lg transition-colors cursor-pointer ${
-                  uploadingFile || isProcessing || isRecording
-                    ? 'border-gray-300 bg-gray-50 cursor-not-allowed opacity-50'
-                    : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50'
-                }`}
-              >
-                <Upload className="w-7 h-7 text-gray-400" />
-                <div className="text-center">
-                  <p className="text-sm font-medium text-gray-900">
-                    {uploadingFile ? 'Uploading...' : 'Click to upload audio file'}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-0.5">
-                    MP3, WAV, OGG, WEBM, M4A, FLAC (Max 25MB)
-                  </p>
-                </div>
-              </label>
             </div>
 
             {transcript && (
