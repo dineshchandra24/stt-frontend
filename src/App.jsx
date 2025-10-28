@@ -47,6 +47,29 @@ export default function EchoScribe() {
     }
   }, []);
 
+  // Handle browser back button
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.hash.slice(1) || 'home';
+      setCurrentView(path);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    
+    // Set initial view from URL
+    const path = window.location.hash.slice(1) || 'home';
+    setCurrentView(path);
+
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Navigate function with history support
+  const navigateTo = (view) => {
+    setCurrentView(view);
+    window.history.pushState(null, '', `#${view}`);
+    setMobileMenuOpen(false);
+  };
+
   // Recording timer
   useEffect(() => {
     if (isRecording) {
@@ -478,7 +501,10 @@ export default function EchoScribe() {
       {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-2.5 flex justify-between items-center">
-          <div className="flex items-center gap-2.5">
+          <button 
+            onClick={() => navigateTo('home')}
+            className="flex items-center gap-2.5 hover:opacity-80 transition-opacity cursor-pointer"
+          >
             <div className="bg-blue-600 w-8 h-8 rounded-lg flex items-center justify-center">
               <Mic className="w-4 h-4 text-white" />
             </div>
@@ -486,21 +512,11 @@ export default function EchoScribe() {
               <h1 className="text-base font-bold text-gray-900">EchoScribe</h1>
               <p className="text-xs text-gray-500 hidden sm:block">Welcome, {currentUser?.name}</p>
             </div>
-          </div>
+          </button>
           
           <div className="hidden md:flex items-center gap-2">
             <button
-              onClick={() => setCurrentView('home')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                currentView === 'home'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <Mic size={14} /> Home
-            </button>
-            <button
-              onClick={() => setCurrentView('dashboard')}
+              onClick={() => navigateTo('dashboard')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                 currentView === 'dashboard'
                   ? 'bg-blue-600 text-white'
@@ -528,17 +544,7 @@ export default function EchoScribe() {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 p-3 bg-white space-y-2">
             <button 
-              onClick={() => { setCurrentView('home'); setMobileMenuOpen(false); }} 
-              className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
-                currentView === 'home' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-100 text-gray-700'
-              }`}
-            >
-              <Mic size={14} /> Home
-            </button>
-            <button 
-              onClick={() => { setCurrentView('dashboard'); setMobileMenuOpen(false); }} 
+              onClick={() => navigateTo('dashboard')}
               className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-md text-sm font-medium ${
                 currentView === 'dashboard' 
                   ? 'bg-blue-600 text-white' 
@@ -702,7 +708,7 @@ export default function EchoScribe() {
               <h3 className="text-base font-semibold text-gray-900 mb-2">No Recordings Yet</h3>
               <p className="text-sm text-gray-600 mb-4">Start recording to see your transcriptions here</p>
               <button
-                onClick={() => setCurrentView('home')}
+                onClick={() => navigateTo('home')}
                 className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition-colors text-sm"
               >
                 Start Recording
