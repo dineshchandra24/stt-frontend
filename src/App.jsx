@@ -36,6 +36,23 @@ export default function EchoScribe() {
   const [displayedText, setDisplayedText] = useState('');
   const [showFooterModal, setShowFooterModal] = useState(null);
   const [authLoading, setAuthLoading] = useState(false);
+  const [translatedText, setTranslatedText] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('hi');
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [showTranslation, setShowTranslation] = useState(false);
+  const [languages] = useState([
+    { code: 'hi', name: 'Hindi', native: 'हिन्दी' },
+    { code: 'mr', name: 'Marathi', native: 'मराठी' },
+    { code: 'bn', name: 'Bengali', native: 'বাংলা' },
+    { code: 'gu', name: 'Gujarati', native: 'ગુજરાતી' },
+    { code: 'ta', name: 'Tamil', native: 'தமிழ்' },
+    { code: 'te', name: 'Telugu', native: 'తెలుగు' },
+    { code: 'kn', name: 'Kannada', native: 'ಕನ್ನಡ' },
+    { code: 'ml', name: 'Malayalam', native: 'മലയാളം' },
+    { code: 'pa', name: 'Punjabi', native: 'ਪੰਜਾਬੀ' },
+    { code: 'ur', name: 'Urdu', native: 'اردو' }
+  ]);
+  const [itemTranslations, setItemTranslations] = useState({});
 
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -460,6 +477,76 @@ export default function EchoScribe() {
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const translateText = async (text, targetLang = selectedLanguage) => {
+    setIsTranslating(true);
+    const token = localStorage.getItem('token');
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/translate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          text: text,
+          targetLanguage: targetLang
+        })
+      });
+
+      const data = await response.json();
+      
+      if (response.ok && data.translatedText) {
+        setTranslatedText(data.translatedText);
+        setShowTranslation(true);
+        showSuccess('Translation completed successfully');
+      } else {
+        alert(data.error || 'Translation failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Translation error:', error);
+      alert('Translation service unavailable. Please try again later.');
+    } finally {
+      setIsTranslating(false);
+    }
+  };
+
+  const translateHistoryItem = async (itemId, text, targetLang) => {
+    const token = localStorage.getItem('token');
+    
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/translate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          text: text,
+          targetLanguage: targetLang
+        })
+      });
+
+      const data = await response.json();
+      
+      if (response.ok && data.translatedText) {
+        setItemTranslations(prev => ({
+          ...prev,
+          [itemId]: {
+            text: data.translatedText,
+            language: targetLang
+          }
+        }));
+        showSuccess('Translation completed');
+      } else {
+        alert(data.error || 'Translation failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Translation error:', error);
+      alert('Translation service unavailable. Please try again later.');
+    }
   };
 
   const handlePasswordChange = async (e) => {
@@ -981,6 +1068,60 @@ export default function EchoScribe() {
                 <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm rounded-2xl p-5 text-slate-200 text-sm leading-relaxed max-h-64 overflow-y-auto border border-purple-500/20 shadow-inner">
                   {transcript}
                 </div>
+
+                {/* Translation Section */}
+                <div className="mt-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 backdrop-blur-sm rounded-2xl p-4 border border-blue-500/30">
+                  <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between mb-3">
+                    <h4 className="text-sm font-semibold text-blue-300 flex items-center gap-2">
+                      🌐 Translate to Indian Language
+                    </h4>
+                    <div className="flex gap-2 items-center w-full sm:w-auto">
+                      <select
+                        value={selectedLanguage}
+                        onChange={(e) => setSelectedLanguage(e.target.value)}
+                        className="flex-1 sm:flex-none px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        {languages.map(lang => (
+                          <option key={lang.code} value={lang.code}>
+                            {lang.native} ({lang.name})
+                          </option>
+                        ))}
+                      </select>
+                      <button
+                        onClick={() => translateText(transcript)}
+                        disabled={isTranslating}
+                        className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl transition-all duration-300 text-xs font-semibold shadow-lg shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      >
+                        {isTranslating ? (
+                          <>
+                            <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            <span>Translating...</span>
+                          </>
+                        ) : (
+                          'Translate'
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
+                  {showTranslation && translatedText && (
+                    <div className="bg-slate-900/50 rounded-xl p-4 border border-blue-500/20 mt-3">
+                      <div className="flex justify-between items-center mb-2">
+                        <p className="text-xs text-blue-300 font-semibold">
+                          Translated to {languages.find(l => l.code === selectedLanguage)?.native}
+                        </p>
+                        <button
+                          onClick={() => copyToClipboard(translatedText)}
+                          className="text-xs text-blue-300 hover:text-blue-200 flex items-center gap-1"
+                        >
+                          <Copy size={12} /> Copy
+                        </button>
+                      </div>
+                      <p className="text-slate-200 text-sm leading-relaxed">{translatedText}</p>
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex gap-3 mt-4">
                   <button 
                     onClick={saveTranscription} 
@@ -989,7 +1130,11 @@ export default function EchoScribe() {
                     Save Transcription
                   </button>
                   <button 
-                    onClick={() => setTranscript('')} 
+                    onClick={() => {
+                      setTranscript('');
+                      setShowTranslation(false);
+                      setTranslatedText('');
+                    }} 
                     className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm border border-slate-700"
                   >
                     Clear
@@ -1095,9 +1240,42 @@ export default function EchoScribe() {
                       <p className="text-slate-300 text-xs leading-relaxed">{item.text}</p>
                     </div>
 
+                    {/* Translation for history item */}
+                    {itemTranslations[item._id] && (
+                      <div className="bg-blue-900/20 rounded-xl p-3 mb-3 border border-blue-500/20">
+                        <p className="text-xs text-blue-300 font-semibold mb-1">
+                          Translation ({languages.find(l => l.code === itemTranslations[item._id].language)?.native})
+                        </p>
+                        <p className="text-slate-200 text-xs leading-relaxed">
+                          {itemTranslations[item._id].text}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Translate dropdown */}
+                    <div className="mb-3 flex gap-2">
+                      <select
+                        onChange={(e) => {
+                          if (e.target.value) {
+                            translateHistoryItem(item._id, item.text, e.target.value);
+                            e.target.value = '';
+                          }
+                        }}
+                        className="flex-1 px-2 py-1.5 text-xs bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        defaultValue=""
+                      >
+                        <option value="" disabled>🌐 Translate to...</option>
+                        {languages.map(lang => (
+                          <option key={lang.code} value={lang.code}>
+                            {lang.native}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
                     <div className="flex gap-2">
                       <button
-                        onClick={() => copyToClipboard(item.text)}
+                        onClick={() => copyToClipboard(itemTranslations[item._id] ? itemTranslations[item._id].text : item.text)}
                         className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl transition-all duration-300 text-xs font-semibold border border-slate-700"
                       >
                         <Copy size={14} /> Copy
@@ -1391,32 +1569,47 @@ export default function EchoScribe() {
             <div className="space-y-4 text-slate-300 text-sm leading-relaxed">
               <div>
                 <h4 className="text-lg font-semibold text-white mb-2">Information We Collect</h4>
-                <p>We collect information you provide directly, including your name, email address, and the audio recordings you upload for transcription.</p>
+                <p>We collect information you provide directly, including your name, email address, phone number (if provided), profile photo (from Google OAuth), and the audio recordings you upload for transcription. We also collect usage data to improve our services.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Authentication Methods</h4>
+                <p>We offer multiple secure authentication options: email/password, phone number authentication, and Google OAuth. When you sign in with Google, we only access your basic profile information (name, email, profile photo) with your explicit consent.</p>
               </div>
               
               <div>
                 <h4 className="text-lg font-semibold text-white mb-2">How We Use Your Information</h4>
-                <p>Your information is used to provide and improve our transcription services, maintain your account, and communicate with you about service updates.</p>
+                <p>Your information is used to provide and improve our transcription services, maintain your account, sync your data across devices, and communicate with you about service updates. We process your audio files solely for transcription purposes.</p>
               </div>
               
               <div>
                 <h4 className="text-lg font-semibold text-white mb-2">Data Security</h4>
-                <p>We implement industry-standard security measures to protect your data. All communications are encrypted, and your recordings are stored securely on our servers.</p>
+                <p>We implement industry-standard security measures including encryption in transit (HTTPS) and at rest. All communications are encrypted, and your recordings are stored securely on protected servers. We use secure authentication tokens and never store passwords in plain text.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Data Storage & Sync</h4>
+                <p>Your transcriptions are stored in secure cloud storage and automatically synced across all devices where you're signed in. This ensures you can access your transcriptions from anywhere while maintaining security.</p>
               </div>
               
               <div>
                 <h4 className="text-lg font-semibold text-white mb-2">Data Retention</h4>
-                <p>Your transcriptions are stored until you choose to delete them. You have full control over your data and can delete any transcription at any time.</p>
+                <p>Your transcriptions are stored indefinitely until you choose to delete them. You have full control over your data and can delete any transcription or your entire history at any time. Account deletion removes all associated data.</p>
               </div>
               
               <div>
                 <h4 className="text-lg font-semibold text-white mb-2">Third-Party Services</h4>
-                <p>We use Deepgram API for transcription services. Your audio data is processed through their secure servers. We do not sell or share your personal information with advertisers.</p>
+                <p>We use Deepgram API for AI-powered transcription services and Google OAuth for authentication. Your audio data is processed through secure APIs. We do not sell or share your personal information with advertisers or unauthorized third parties.</p>
               </div>
               
               <div>
                 <h4 className="text-lg font-semibold text-white mb-2">Your Rights</h4>
-                <p>You have the right to access, modify, or delete your personal data at any time through your profile settings.</p>
+                <p>You have the right to access, modify, export, or delete your personal data at any time through your profile settings. You can change your password, manage authentication methods, and control all aspects of your account.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">Cookies & Tracking</h4>
+                <p>We use essential cookies for authentication and session management. We do not use tracking cookies for advertising purposes.</p>
               </div>
               
               <p className="text-xs text-slate-500 pt-4 border-t border-slate-700">Last updated: October 2025</p>
