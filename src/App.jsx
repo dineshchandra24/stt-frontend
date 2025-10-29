@@ -1321,32 +1321,47 @@ export default function EchoScribe() {
             <div className="space-y-4 text-slate-300 text-sm leading-relaxed">
               <div>
                 <h4 className="text-lg font-semibold text-white mb-2">1. Acceptance of Terms</h4>
-                <p>By accessing and using EchoScribe, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use our service.</p>
+                <p>By accessing and using EchoScribe, you agree to be bound by these Terms of Use. If you do not agree to these terms, please do not use our service. Your continued use of the service constitutes acceptance of any updates to these terms.</p>
               </div>
               
               <div>
                 <h4 className="text-lg font-semibold text-white mb-2">2. Service Description</h4>
-                <p>EchoScribe provides voice-to-text transcription services. We use advanced AI technology to convert your audio recordings into text format.</p>
+                <p>EchoScribe provides AI-powered voice-to-text transcription services. We use advanced technology to convert your audio recordings into accurate text format. The service includes real-time recording, audio file uploads, cloud storage, and multiple export formats.</p>
               </div>
               
               <div>
-                <h4 className="text-lg font-semibold text-white mb-2">3. User Responsibilities</h4>
-                <p>You are responsible for maintaining the confidentiality of your account credentials. You agree not to use the service for any unlawful purposes or to upload content that infringes on others' rights.</p>
+                <h4 className="text-lg font-semibold text-white mb-2">3. User Accounts</h4>
+                <p>You may create an account using email/password, phone number, or Google OAuth. You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account. Notify us immediately of any unauthorized access.</p>
               </div>
               
               <div>
-                <h4 className="text-lg font-semibold text-white mb-2">4. Privacy & Data</h4>
-                <p>We respect your privacy. Your audio recordings and transcriptions are stored securely and are only accessible by you. We do not share your data with third parties without your consent.</p>
+                <h4 className="text-lg font-semibold text-white mb-2">4. User Responsibilities</h4>
+                <p>You agree not to use the service for any unlawful purposes, to upload content that infringes on others' rights, or to attempt to compromise the security of our systems. You are solely responsible for the content you upload and transcribe.</p>
               </div>
               
               <div>
-                <h4 className="text-lg font-semibold text-white mb-2">5. Service Limitations</h4>
-                <p>While we strive for accuracy, transcription results may vary based on audio quality, accents, and background noise. We do not guarantee 100% accuracy.</p>
+                <h4 className="text-lg font-semibold text-white mb-2">5. Privacy & Data Protection</h4>
+                <p>We respect your privacy and implement industry-standard security measures. Your audio recordings and transcriptions are encrypted and stored securely. We do not share your data with third parties without your consent. See our Privacy Policy for detailed information.</p>
               </div>
               
               <div>
-                <h4 className="text-lg font-semibold text-white mb-2">6. Modifications</h4>
-                <p>We reserve the right to modify these terms at any time. Continued use of the service constitutes acceptance of any changes.</p>
+                <h4 className="text-lg font-semibold text-white mb-2">6. Service Limitations</h4>
+                <p>While we strive for high accuracy, transcription results may vary based on audio quality, accents, technical terminology, and background noise. We do not guarantee 100% accuracy. Audio files are limited to 25MB per upload.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">7. Intellectual Property</h4>
+                <p>You retain all rights to your original content. By using our service, you grant us a limited license to process your audio for transcription purposes only. Our service technology and interface remain our intellectual property.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">8. Termination</h4>
+                <p>You may delete your account at any time. We reserve the right to suspend or terminate accounts that violate these terms or engage in abusive behavior.</p>
+              </div>
+              
+              <div>
+                <h4 className="text-lg font-semibold text-white mb-2">9. Modifications</h4>
+                <p>We reserve the right to modify these terms at any time. We will notify users of significant changes. Continued use of the service constitutes acceptance of any changes.</p>
               </div>
               
               <p className="text-xs text-slate-500 pt-4 border-t border-slate-700">Last updated: October 2025</p>
@@ -1436,18 +1451,21 @@ export default function EchoScribe() {
               
               <div>
                 <h4 className="text-lg font-semibold text-white mb-2">What We Offer</h4>
-                <p>Our platform provides high-quality speech-to-text transcription powered by advanced AI technology. Whether you're recording meetings, interviews, lectures, or personal notes, EchoScribe delivers accurate transcriptions in seconds.</p>
+                <p>Our platform provides high-quality speech-to-text transcription powered by advanced AI technology. Whether you're recording meetings, interviews, lectures, or personal notes, EchoScribe delivers accurate transcriptions in seconds with seamless authentication and cloud sync.</p>
               </div>
               
               <div>
                 <h4 className="text-lg font-semibold text-white mb-2">Key Features</h4>
                 <ul className="list-disc list-inside space-y-1 ml-2">
-                  <li>Real-time voice recording and transcription</li>
-                  <li>Audio file upload support (MP3, WAV, OGG, M4A, FLAC)</li>
-                  <li>Secure cloud storage for your transcriptions</li>
-                  <li>Download transcriptions as PDF or TXT</li>
-                  <li>User-friendly interface with modern design</li>
-                  <li>Cross-device compatibility</li>
+                  <li>Real-time voice recording with live timer</li>
+                  <li>Audio file upload support (MP3, WAV, OGG, M4A, FLAC, WEBM)</li>
+                  <li>Multiple authentication methods (Email, Phone, Google OAuth)</li>
+                  <li>Secure cloud storage with automatic sync</li>
+                  <li>Download transcriptions as PDF or TXT formats</li>
+                  <li>Profile management with password controls</li>
+                  <li>Full transcription history with search capabilities</li>
+                  <li>Cross-device compatibility with responsive design</li>
+                  <li>Dark mode optimized interface</li>
                 </ul>
               </div>
               
@@ -1509,7 +1527,7 @@ export default function EchoScribe() {
                     <FileAudio className="w-4 h-4 text-purple-400" />
                     Getting Started
                   </h4>
-                  <p className="text-xs text-slate-400">Learn the basics of using EchoScribe for transcription.</p>
+                  <p className="text-xs text-slate-400">Learn how to record, upload audio files, and manage your transcriptions.</p>
                 </div>
                 
                 <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
@@ -1517,7 +1535,7 @@ export default function EchoScribe() {
                     <Shield className="w-4 h-4 text-emerald-400" />
                     Account & Security
                   </h4>
-                  <p className="text-xs text-slate-400">Manage your account settings and security preferences.</p>
+                  <p className="text-xs text-slate-400">Manage authentication methods, change passwords, and secure your account.</p>
                 </div>
                 
                 <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
@@ -1525,7 +1543,7 @@ export default function EchoScribe() {
                     <Upload className="w-4 h-4 text-orange-400" />
                     File Uploads
                   </h4>
-                  <p className="text-xs text-slate-400">Supported formats, file size limits, and upload tips.</p>
+                  <p className="text-xs text-slate-400">Supported formats (MP3, WAV, OGG, WEBM, M4A, FLAC), 25MB file size limit, and quality tips.</p>
                 </div>
                 
                 <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
@@ -1533,7 +1551,7 @@ export default function EchoScribe() {
                     <Download className="w-4 h-4 text-blue-400" />
                     Exports & Downloads
                   </h4>
-                  <p className="text-xs text-slate-400">Download your transcriptions in PDF or TXT format.</p>
+                  <p className="text-xs text-slate-400">Download individual or all transcriptions in PDF or TXT format with one click.</p>
                 </div>
               </div>
               
@@ -1641,7 +1659,12 @@ export default function EchoScribe() {
             <div className="space-y-5 text-slate-300 text-sm">
               <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
                 <h4 className="text-base font-semibold text-white mb-2">What audio formats are supported?</h4>
-                <p>EchoScribe supports MP3, WAV, OGG, WEBM, M4A, and FLAC audio formats. Maximum file size is 25MB.</p>
+                <p>EchoScribe supports MP3, WAV, OGG, WEBM, M4A, and FLAC audio formats. Maximum file size is 25MB per upload.</p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <h4 className="text-base font-semibold text-white mb-2">How do I create an account?</h4>
+                <p>You can sign up using your email and password, phone number, or instantly with Google OAuth. All methods provide secure access to your transcriptions.</p>
               </div>
               
               <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
@@ -1651,27 +1674,37 @@ export default function EchoScribe() {
               
               <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
                 <h4 className="text-base font-semibold text-white mb-2">Is my data secure?</h4>
-                <p>Yes! All data is encrypted in transit and at rest. Your recordings and transcriptions are private and only accessible by you.</p>
+                <p>Yes! We use industry-standard encryption for all data in transit and at rest. Your recordings and transcriptions are private and only accessible by you. We support multiple secure authentication methods including Google OAuth.</p>
               </div>
               
               <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
                 <h4 className="text-base font-semibold text-white mb-2">Can I download my transcriptions?</h4>
-                <p>Absolutely! You can download your transcriptions in both PDF and TXT formats from the History page.</p>
+                <p>Absolutely! You can download individual transcriptions or your entire history in both PDF and TXT formats from the History page.</p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <h4 className="text-base font-semibold text-white mb-2">How do I change my password?</h4>
+                <p>Visit your Profile page to change your password. If you signed up with Google, you can set a password to enable email/password login as an additional option.</p>
               </div>
               
               <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
                 <h4 className="text-base font-semibold text-white mb-2">How long are transcriptions stored?</h4>
-                <p>Your transcriptions are stored indefinitely until you choose to delete them. You have full control over your data.</p>
+                <p>Your transcriptions are stored indefinitely in the cloud until you choose to delete them. You can access them from any device after signing in.</p>
               </div>
               
               <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
                 <h4 className="text-base font-semibold text-white mb-2">Can I use EchoScribe offline?</h4>
-                <p>Currently, EchoScribe requires an internet connection for transcription as we use cloud-based AI processing for the best accuracy.</p>
+                <p>Currently, EchoScribe requires an internet connection for transcription as we use cloud-based AI processing for the best accuracy and to sync your data across devices.</p>
               </div>
               
               <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
                 <h4 className="text-base font-semibold text-white mb-2">What languages are supported?</h4>
-                <p>EchoScribe currently supports English transcription. We're working on adding more languages in future updates.</p>
+                <p>EchoScribe currently supports English transcription with high accuracy. We're working on adding more languages in future updates.</p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <h4 className="text-base font-semibold text-white mb-2">Can I delete my transcriptions?</h4>
+                <p>Yes! You can delete individual transcriptions or clear your entire history at once. You have complete control over your data.</p>
               </div>
             </div>
           </div>
