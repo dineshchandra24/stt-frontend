@@ -29,6 +29,7 @@ export default function EchoScribe() {
   const [passwordError, setPasswordError] = useState('');
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [hasPassword, setHasPassword] = useState(true);
   const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showClearAllConfirm, setShowClearAllConfirm] = useState(false);
@@ -51,7 +52,9 @@ export default function EchoScribe() {
     const user = localStorage.getItem('user');
     if (token && user) {
       setIsAuthenticated(true);
-      setCurrentUser(JSON.parse(user));
+      const userData = JSON.parse(user);
+      setCurrentUser(userData);
+      setHasPassword(userData.hasPassword !== false);
       loadHistory();
     }
     setCurrentView('home');
@@ -193,6 +196,7 @@ export default function EchoScribe() {
           localStorage.setItem('user', JSON.stringify(event.data.user));
           setIsAuthenticated(true);
           setCurrentUser(event.data.user);
+          setHasPassword(event.data.user.hasPassword !== false);
           setShowAuthModal(false);
           loadHistory();
           showSuccess('Successfully signed in with Google!');
@@ -474,28 +478,44 @@ export default function EchoScribe() {
 
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
-        method: 'POST',
+      const endpoint = hasPassword ? '/api/auth/change-password' : '/api/auth/set-password';
+      const payload = hasPassword 
+        ? {
+            currentPassword: passwordData.currentPassword,
+            newPassword: passwordData.newPassword
+          }
+        : {
+            newPassword: passwordData.newPassword
+          };
+
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: 'PUT',
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({
-          currentPassword: passwordData.currentPassword,
-          newPassword: passwordData.newPassword
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        showSuccess('Password changed successfully');
+        showSuccess(hasPassword ? 'Password changed successfully' : 'Password set successfully');
         setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+        setShowCurrentPassword(false);
+        setShowNewPassword(false);
+        setHasPassword(true);
+        
+        // Update user data in localStorage
+        if (data.user) {
+          localStorage.setItem('user', JSON.stringify(data.user));
+          setCurrentUser(data.user);
+        }
       } else {
-        setPasswordError(data.error || 'Failed to change password');
+        setPasswordError(data.error || data.message || `Failed to ${hasPassword ? 'change' : 'set'} password`);
       }
     } catch (err) {
-      setPasswordError('Server error. Please try again.');
+      setPasswordError(`Unable to ${hasPassword ? 'change' : 'set'} password. Please try again.`);
       console.error('Password change error:', err);
     }
   };
@@ -1179,33 +1199,41 @@ export default function EchoScribe() {
             <div>
               <h4 className="text-lg font-bold text-white mb-5 flex items-center gap-2">
                 <Lock className="w-5 h-5 text-purple-400" />
-                Change Password
+                {hasPassword ? 'Change Password' : 'Set Password'}
               </h4>
-              <form onSubmit={handlePasswordChange} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">Current Password</label>
-                  <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={18} />
-                    <input
-                      type={showCurrentPassword ? 'text' : 'password'}
-                      required
-                      value={passwordData.currentPassword}
-                      onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                      className="w-full pl-12 pr-12 py-3 text-sm bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
-                      placeholder="Enter current password"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
-                    >
-                      {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
-                  </div>
+              {!hasPassword && (
+                <div className="bg-blue-500/10 border border-blue-500/30 text-blue-400 px-4 py-3 rounded-xl text-xs font-medium mb-4 flex items-start gap-2">
+                  <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <span>You signed in with Google. Set a password to enable email/password login.</span>
                 </div>
+              )}
+              <form onSubmit={handlePasswordChange} className="space-y-4">
+                {hasPassword && (
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-2">Current Password</label>
+                    <div className="relative">
+                      <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={18} />
+                      <input
+                        type={showCurrentPassword ? 'text' : 'password'}
+                        required
+                        value={passwordData.currentPassword}
+                        onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
+                        className="w-full pl-12 pr-12 py-3 text-sm bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
+                        placeholder="Enter current password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                      >
+                        {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">New Password</label>
+                  <label className="block text-xs font-semibold text-slate-300 mb-2">{hasPassword ? 'New Password' : 'Password'}</label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={18} />
                     <input
@@ -1214,7 +1242,7 @@ export default function EchoScribe() {
                       value={passwordData.newPassword}
                       onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
                       className="w-full pl-12 pr-12 py-3 text-sm bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
-                      placeholder="Enter new password"
+                      placeholder={hasPassword ? "Enter new password" : "Enter password (min 6 characters)"}
                     />
                     <button
                       type="button"
@@ -1227,7 +1255,7 @@ export default function EchoScribe() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">Confirm New Password</label>
+                  <label className="block text-xs font-semibold text-slate-300 mb-2">{hasPassword ? 'Confirm New Password' : 'Confirm Password'}</label>
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={18} />
                     <input
@@ -1236,7 +1264,7 @@ export default function EchoScribe() {
                       value={passwordData.confirmPassword}
                       onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
                       className="w-full pl-12 pr-4 py-3 text-sm bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
-                      placeholder="Confirm new password"
+                      placeholder={hasPassword ? "Confirm new password" : "Confirm password"}
                     />
                   </div>
                 </div>
@@ -1252,7 +1280,7 @@ export default function EchoScribe() {
                     type="submit"
                     className="flex-1 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm shadow-lg shadow-purple-500/30"
                   >
-                    Update Password
+                    {hasPassword ? 'Update Password' : 'Set Password'}
                   </button>
                   <button
                     type="button"
