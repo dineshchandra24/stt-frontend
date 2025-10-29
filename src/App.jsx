@@ -43,7 +43,7 @@ export default function EchoScribe() {
   const [isSaving, setIsSaving] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
-  const [isCopying, setIsCopying] = useState(false);
+  const [copyingId, setCopyingId] = useState(null);
   const [languages] = useState([
     // Indian Languages
     { code: 'hi', name: 'Hindi', native: 'हिन्दी', category: 'Indian' },
@@ -497,13 +497,11 @@ export default function EchoScribe() {
     }
   };
 
-  const copyToClipboard = (text) => {
-    setIsCopying(true);
+  const copyToClipboard = (text, id = 'main') => {
+    setCopyingId(id);
     navigator.clipboard.writeText(text);
-    setCopied(true);
     setTimeout(() => {
-      setCopied(false);
-      setIsCopying(false);
+      setCopyingId(null);
     }, 2000);
   };
 
@@ -1063,7 +1061,7 @@ export default function EchoScribe() {
                     onClick={() => copyToClipboard(transcript)} 
                     className="flex items-center gap-2 px-4 py-2 text-sm bg-slate-800 hover:bg-slate-700 rounded-xl transition-all duration-300 font-semibold text-slate-300 hover:text-white border border-slate-700"
                   >
-                    {copied ? (
+                    {copyingId === 'main' ? (
                       <span className="flex items-center gap-2">
                         <Check size={16} className="text-emerald-400" /> Copied!
                       </span>
@@ -1130,10 +1128,18 @@ export default function EchoScribe() {
                         </p>
                         <div className="flex items-center gap-2">
                           <button
-                            onClick={() => copyToClipboard(translatedText)}
+                            onClick={() => copyToClipboard(translatedText, 'translation-main')}
                             className="text-xs text-blue-300 hover:text-blue-200 flex items-center gap-1"
                           >
-                            <Copy size={12} /> Copy
+                            {copyingId === 'translation-main' ? (
+                              <>
+                                <Check size={12} className="text-emerald-400" /> Copied
+                              </>
+                            ) : (
+                              <>
+                                <Copy size={12} /> Copy
+                              </>
+                            )}
                           </button>
                           <button
                             onClick={() => {
@@ -1341,11 +1347,11 @@ export default function EchoScribe() {
 
                     <div className="flex gap-2">
                       <button
-                        onClick={() => copyToClipboard(itemTranslations[item._id] ? itemTranslations[item._id].text : item.text)}
-                        disabled={isCopying}
+                        onClick={() => copyToClipboard(itemTranslations[item._id] ? itemTranslations[item._id].text : item.text, `history-${item._id}`)}
+                        disabled={copyingId === `history-${item._id}`}
                         className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl transition-all duration-300 text-xs font-semibold border border-slate-700 disabled:opacity-70 disabled:cursor-not-allowed"
                       >
-                        {isCopying ? (
+                        {copyingId === `history-${item._id}` ? (
                           <>
                             <div className="w-3 h-3 border-2 border-slate-300 border-t-transparent rounded-full animate-spin"></div>
                             <span>Copying...</span>
@@ -1448,11 +1454,11 @@ export default function EchoScribe() {
                           </p>
                           <div className="flex items-center gap-2">
                             <button
-                              onClick={() => copyToClipboard(translatedText)}
-                              disabled={isCopying}
+                              onClick={() => copyToClipboard(translatedText, 'translation-modal')}
+                              disabled={copyingId === 'translation-modal'}
                               className="text-xs text-blue-300 hover:text-blue-200 flex items-center gap-1 disabled:opacity-70"
                             >
-                              {isCopying ? (
+                              {copyingId === 'translation-modal' ? (
                                 <>
                                   <div className="w-3 h-3 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"></div>
                                   <span>Copying...</span>
@@ -1483,19 +1489,15 @@ export default function EchoScribe() {
                 {/* Fixed action buttons at bottom */}
                 <div className="flex gap-3 pt-4 border-t border-purple-500/20">
                   <button
-                    onClick={() => copyToClipboard(showTranslation && translatedText ? translatedText : selectedItem.text)}
-                    disabled={isCopying}
+                    onClick={() => copyToClipboard(showTranslation && translatedText ? translatedText : selectedItem.text, `modal-${selectedItem._id}`)}
+                    disabled={copyingId === `modal-${selectedItem._id}`}
                     className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl transition-all duration-300 font-semibold text-sm shadow-lg shadow-blue-500/30 disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    {isCopying ? (
+                    {copyingId === `modal-${selectedItem._id}` ? (
                       <>
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                         <span>Copying...</span>
                       </>
-                    ) : copied ? (
-                      <span className="flex items-center gap-2">
-                        <Check size={18} /> Copied!
-                      </span>
                     ) : (
                       <span className="flex items-center gap-2">
                         <Copy size={18} /> Copy Text
