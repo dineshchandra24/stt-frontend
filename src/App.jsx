@@ -519,34 +519,24 @@ export default function EchoScribe() {
   };
 
   const translateHistoryItem = async (itemId, text, targetLang) => {
-    const token = localStorage.getItem('token');
-    
     try {
-      const response = await fetch(`${API_BASE_URL}/api/translate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          text: text,
-          targetLanguage: targetLang
-        })
-      });
-
+      // Using MyMemory API directly with registered email
+      const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLang}&de=cricketkvideos6@gmail.com`;
+      
+      const response = await fetch(apiUrl);
       const data = await response.json();
       
-      if (response.ok && data.translatedText) {
+      if (data.responseStatus === 200 && data.responseData && data.responseData.translatedText) {
         setItemTranslations(prev => ({
           ...prev,
           [itemId]: {
-            text: data.translatedText,
+            text: data.responseData.translatedText,
             language: targetLang
           }
         }));
         showSuccess('Translation completed');
       } else {
-        alert(data.error || 'Translation failed. Please try again.');
+        alert('Translation failed. Please try again.');
       }
     } catch (error) {
       console.error('Translation error:', error);
