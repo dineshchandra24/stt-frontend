@@ -1114,12 +1114,23 @@ export default function EchoScribe() {
                         <p className="text-xs text-blue-300 font-semibold">
                           Translated to {languages.find(l => l.code === selectedLanguage)?.native}
                         </p>
-                        <button
-                          onClick={() => copyToClipboard(translatedText)}
-                          className="text-xs text-blue-300 hover:text-blue-200 flex items-center gap-1"
-                        >
-                          <Copy size={12} /> Copy
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => copyToClipboard(translatedText)}
+                            className="text-xs text-blue-300 hover:text-blue-200 flex items-center gap-1"
+                          >
+                            <Copy size={12} /> Copy
+                          </button>
+                          <button
+                            onClick={() => {
+                              setShowTranslation(false);
+                              setTranslatedText('');
+                            }}
+                            className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1 ml-2"
+                          >
+                            <X size={12} /> Close
+                          </button>
+                        </div>
                       </div>
                       <p className="text-slate-200 text-sm leading-relaxed">{translatedText}</p>
                     </div>
@@ -1247,9 +1258,23 @@ export default function EchoScribe() {
                     {/* Translation for history item */}
                     {itemTranslations[item._id] && (
                       <div className="bg-blue-900/20 rounded-xl p-3 mb-3 border border-blue-500/20">
-                        <p className="text-xs text-blue-300 font-semibold mb-1">
-                          Translation ({languages.find(l => l.code === itemTranslations[item._id].language)?.native})
-                        </p>
+                        <div className="flex justify-between items-center mb-1">
+                          <p className="text-xs text-blue-300 font-semibold">
+                            Translation ({languages.find(l => l.code === itemTranslations[item._id].language)?.native})
+                          </p>
+                          <button
+                            onClick={() => {
+                              setItemTranslations(prev => {
+                                const newTranslations = { ...prev };
+                                delete newTranslations[item._id];
+                                return newTranslations;
+                              });
+                            }}
+                            className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1"
+                          >
+                            <X size={12} /> Close
+                          </button>
+                        </div>
                         <p className="text-slate-200 text-xs leading-relaxed">
                           {itemTranslations[item._id].text}
                         </p>
