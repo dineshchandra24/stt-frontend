@@ -1531,13 +1531,13 @@ export default function EchoScribe() {
       )}
 
       {currentView === 'profile' && (
-        <div className="max-w-2xl mx-auto px-4 py-8 relative z-10 flex-1">
-          <div className="bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-purple-500/20 p-6 md:p-8 shadow-2xl shadow-purple-500/10">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6 text-center">Profile Settings</h2>
+        <div className="max-w-7xl mx-auto px-4 py-8 relative z-10 flex-1 w-full">
+          <div className="bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-purple-500/20 p-6 md:p-10 shadow-2xl shadow-purple-500/10">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-8 text-center">Profile Settings</h2>
             
-            <div className="flex flex-col items-center gap-4 mb-8 pb-8 border-b border-purple-500/20">
+            <div className="flex flex-col items-center gap-5 mb-10 pb-10 border-b border-purple-500/20">
               {currentUser?.profilePhoto ? (
-                <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-xl shadow-purple-500/30 border-2 border-purple-500/30">
+                <div className="w-28 h-28 md:w-32 md:h-32 rounded-2xl overflow-hidden shadow-xl shadow-purple-500/30 border-2 border-purple-500/30">
                   <img 
                     src={currentUser.profilePhoto} 
                     alt={currentUser?.name}
@@ -1545,39 +1545,39 @@ export default function EchoScribe() {
                   />
                 </div>
               ) : (
-                <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl shadow-purple-500/30">
-                  <User className="w-12 h-12 text-white" />
+                <div className="w-28 h-28 md:w-32 md:h-32 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl shadow-purple-500/30">
+                  <User className="w-14 h-14 md:w-16 md:h-16 text-white" />
                 </div>
               )}
               <div className="text-center">
-                <h3 className="text-xl font-bold text-white mb-1">{currentUser?.name}</h3>
-                <p className="text-sm text-slate-400">{currentUser?.email}</p>
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{currentUser?.name}</h3>
+                <p className="text-base md:text-lg text-slate-400">{currentUser?.email}</p>
               </div>
             </div>
 
-            <div>
-              <h4 className="text-lg font-bold text-white mb-5 flex items-center gap-2">
-                <Lock className="w-5 h-5 text-purple-400" />
+            <div className="max-w-3xl mx-auto">
+              <h4 className="text-xl md:text-2xl font-bold text-white mb-6 flex items-center justify-center gap-3">
+                <Lock className="w-6 h-6 md:w-7 md:h-7 text-purple-400" />
                 {hasPassword ? 'Change Password' : 'Set Password'}
               </h4>
               {!hasPassword && (
-                <div className="bg-blue-500/10 border border-blue-500/30 text-blue-400 px-4 py-3 rounded-xl text-xs font-medium mb-4 flex items-start gap-2">
-                  <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <div className="bg-blue-500/10 border border-blue-500/30 text-blue-400 px-5 py-4 rounded-xl text-sm font-medium mb-6 flex items-start gap-3">
+                  <Info className="w-5 h-5 mt-0.5 flex-shrink-0" />
                   <span>You signed in with Google. Set a password to enable email/password login.</span>
                 </div>
               )}
-              <form onSubmit={handlePasswordChange} className="space-y-4">
+              <form onSubmit={handlePasswordChange} className="space-y-5">
                 {hasPassword && (
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-2">Current Password</label>
+                    <label className="block text-sm font-semibold text-slate-300 mb-3">Current Password</label>
                     <div className="relative">
-                      <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={18} />
+                      <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={20} />
                       <input
                         type={showCurrentPassword ? 'text' : 'password'}
                         required
                         value={passwordData.currentPassword}
                         onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                        className="w-full pl-12 pr-12 py-3 text-sm bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
+                        className="w-full pl-12 pr-12 py-4 text-base bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
                         placeholder="Enter current password"
                       />
                       <button
@@ -1585,22 +1585,22 @@ export default function EchoScribe() {
                         onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                         className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
                       >
-                        {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        {showCurrentPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                       </button>
                     </div>
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">{hasPassword ? 'New Password' : 'Password'}</label>
+                  <label className="block text-sm font-semibold text-slate-300 mb-3">{hasPassword ? 'New Password' : 'Password'}</label>
                   <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={18} />
+                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={20} />
                     <input
                       type={showNewPassword ? 'text' : 'password'}
                       required
                       value={passwordData.newPassword}
                       onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                      className="w-full pl-12 pr-12 py-3 text-sm bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
+                      className="w-full pl-12 pr-12 py-4 text-base bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
                       placeholder={hasPassword ? "Enter new password" : "Enter password (min 6 characters)"}
                     />
                     <button
@@ -1608,36 +1608,36 @@ export default function EchoScribe() {
                       onClick={() => setShowNewPassword(!showNewPassword)}
                       className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
                     >
-                      {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      {showNewPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-2">{hasPassword ? 'Confirm New Password' : 'Confirm Password'}</label>
+                  <label className="block text-sm font-semibold text-slate-300 mb-3">{hasPassword ? 'Confirm New Password' : 'Confirm Password'}</label>
                   <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={18} />
+                    <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={20} />
                     <input
                       type="password"
                       required
                       value={passwordData.confirmPassword}
                       onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                      className="w-full pl-12 pr-4 py-3 text-sm bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
+                      className="w-full pl-12 pr-4 py-4 text-base bg-slate-800/50 border border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-slate-500 transition-all duration-300"
                       placeholder={hasPassword ? "Confirm new password" : "Confirm password"}
                     />
                   </div>
                 </div>
 
                 {passwordError && (
-                  <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-xs font-medium">
+                  <div className="bg-red-500/10 border border-red-500/30 text-red-400 px-5 py-4 rounded-xl text-sm font-medium">
                     {passwordError}
                   </div>
                 )}
 
-                <div className="flex gap-3 pt-2">
+                <div className="flex gap-4 pt-4">
                   <button
                     type="submit"
-                    className="flex-1 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm shadow-lg shadow-purple-500/30"
+                    className="flex-1 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 text-base shadow-lg shadow-purple-500/30"
                   >
                     {hasPassword ? 'Update Password' : 'Set Password'}
                   </button>
@@ -1647,7 +1647,7 @@ export default function EchoScribe() {
                       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
                       setPasswordError('');
                     }}
-                    className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold py-3 px-4 rounded-xl transition-all duration-300 text-sm border border-slate-700"
+                    className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 text-base border border-slate-700"
                   >
                     Clear Form
                   </button>
