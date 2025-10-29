@@ -615,7 +615,7 @@ export default function EchoScribe() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 relative overflow-hidden flex flex-col">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -950,7 +950,7 @@ export default function EchoScribe() {
       </header>
 
       {currentView === 'home' && (
-        <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
+        <div className="max-w-4xl mx-auto px-4 py-8 relative z-10 flex-1">
           {!isAuthenticated && (
             <div className="bg-gradient-to-r from-purple-900/40 to-pink-900/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 p-4 mb-6 shadow-lg shadow-purple-500/10">
               <div className="flex items-center justify-between gap-4">
@@ -1191,7 +1191,7 @@ export default function EchoScribe() {
       )}
 
       {currentView === 'history' && (
-        <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 py-8 relative z-10 flex-1">
           <div className="bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-purple-500/20 p-8 shadow-2xl shadow-purple-500/10">
             <div className="mb-8 flex justify-between items-center flex-wrap gap-4">
               <div>
@@ -1531,7 +1531,7 @@ export default function EchoScribe() {
       )}
 
       {currentView === 'profile' && (
-        <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
+        <div className="max-w-4xl mx-auto px-4 py-8 relative z-10 flex-1">
           <div className="bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-purple-500/20 p-8 shadow-2xl shadow-purple-500/10">
             <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-8">Profile Settings</h2>
             
@@ -2086,7 +2086,7 @@ export default function EchoScribe() {
       )}
 
       {/* Footer */}
-      <footer className="bg-slate-900/40 backdrop-blur-xl border-t border-purple-500/10 mt-auto relative z-10">
+      <footer className="bg-slate-900/40 backdrop-blur-xl border-t border-purple-500/10 relative z-10 mt-8">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-5">
             {/* Brand Section */}
