@@ -950,11 +950,11 @@ export default function EchoScribe() {
       </header>
 
       {currentView === 'home' && (
-        <div className="max-w-4xl mx-auto px-4 py-8 relative z-10 flex-1">
+        <div className="max-w-7xl mx-auto px-4 py-8 relative z-10 flex-1 w-full">
           {!isAuthenticated && (
             <div className="bg-gradient-to-r from-purple-900/40 to-pink-900/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 p-4 mb-6 shadow-lg shadow-purple-500/10">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-3 text-center md:text-left">
                   <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-purple-500/30">
                     <Sparkles className="w-6 h-6 text-white" />
                   </div>
@@ -965,7 +965,7 @@ export default function EchoScribe() {
                 </div>
                 <button
                   onClick={() => setShowAuthModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-xl transition-all duration-300 text-xs font-semibold flex-shrink-0 shadow-lg shadow-purple-500/30"
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-xl transition-all duration-300 text-xs font-semibold flex-shrink-0 shadow-lg shadow-purple-500/30 w-full md:w-auto justify-center"
                 >
                   <User size={14} /> Sign In
                 </button>
@@ -973,12 +973,12 @@ export default function EchoScribe() {
             </div>
           )}
           
-          <div className="bg-slate-900/60 backdrop-blur-xl rounded-2xl md:rounded-3xl border border-purple-500/20 p-5 md:p-8 shadow-2xl shadow-purple-500/10">
-            <div className="text-center mb-5">
-              <h2 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-1">
+          <div className="bg-slate-900/60 backdrop-blur-xl rounded-2xl md:rounded-3xl border border-purple-500/20 p-6 md:p-10 shadow-2xl shadow-purple-500/10">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-3">
                 {displayedText}
               </h2>
-              <p className="text-slate-400 text-xs md:text-sm">Click the button below to start recording</p>
+              <p className="text-slate-400 text-sm md:text-base">Click the button below to start recording</p>
             </div>
             
             <div className="flex flex-col items-center gap-4 md:gap-6">
@@ -1531,13 +1531,13 @@ export default function EchoScribe() {
       )}
 
       {currentView === 'profile' && (
-        <div className="max-w-4xl mx-auto px-4 py-8 relative z-10 flex-1">
-          <div className="bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-purple-500/20 p-8 shadow-2xl shadow-purple-500/10">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-8">Profile Settings</h2>
+        <div className="max-w-2xl mx-auto px-4 py-8 relative z-10 flex-1">
+          <div className="bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-purple-500/20 p-6 md:p-8 shadow-2xl shadow-purple-500/10">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-6 text-center">Profile Settings</h2>
             
-            <div className="flex items-center gap-5 mb-8 pb-8 border-b border-purple-500/20">
+            <div className="flex flex-col items-center gap-4 mb-8 pb-8 border-b border-purple-500/20">
               {currentUser?.profilePhoto ? (
-                <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-xl shadow-purple-500/30 border-2 border-purple-500/30">
+                <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-xl shadow-purple-500/30 border-2 border-purple-500/30">
                   <img 
                     src={currentUser.profilePhoto} 
                     alt={currentUser?.name}
@@ -1545,11 +1545,11 @@ export default function EchoScribe() {
                   />
                 </div>
               ) : (
-                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl shadow-purple-500/30">
-                  <User className="w-10 h-10 text-white" />
+                <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl shadow-purple-500/30">
+                  <User className="w-12 h-12 text-white" />
                 </div>
               )}
-              <div>
+              <div className="text-center">
                 <h3 className="text-xl font-bold text-white mb-1">{currentUser?.name}</h3>
                 <p className="text-sm text-slate-400">{currentUser?.email}</p>
               </div>
