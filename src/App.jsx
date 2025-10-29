@@ -41,16 +41,30 @@ export default function EchoScribe() {
   const [isTranslating, setIsTranslating] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
   const [languages] = useState([
-    { code: 'hi', name: 'Hindi', native: 'हिन्दी' },
-    { code: 'mr', name: 'Marathi', native: 'मराठी' },
-    { code: 'bn', name: 'Bengali', native: 'বাংলা' },
-    { code: 'gu', name: 'Gujarati', native: 'ગુજરાતી' },
-    { code: 'ta', name: 'Tamil', native: 'தமிழ்' },
-    { code: 'te', name: 'Telugu', native: 'తెలుగు' },
-    { code: 'kn', name: 'Kannada', native: 'ಕನ್ನಡ' },
-    { code: 'ml', name: 'Malayalam', native: 'മലയാളം' },
-    { code: 'pa', name: 'Punjabi', native: 'ਪੰਜਾਬੀ' },
-    { code: 'ur', name: 'Urdu', native: 'اردو' }
+    // Indian Languages
+    { code: 'hi', name: 'Hindi', native: 'हिन्दी', category: 'Indian' },
+    { code: 'mr', name: 'Marathi', native: 'मराठी', category: 'Indian' },
+    { code: 'bn', name: 'Bengali', native: 'বাংলা', category: 'Indian' },
+    { code: 'gu', name: 'Gujarati', native: 'ગુજરાતી', category: 'Indian' },
+    { code: 'ta', name: 'Tamil', native: 'தமிழ்', category: 'Indian' },
+    { code: 'te', name: 'Telugu', native: 'తెలుగు', category: 'Indian' },
+    { code: 'kn', name: 'Kannada', native: 'ಕನ್ನಡ', category: 'Indian' },
+    { code: 'ml', name: 'Malayalam', native: 'മലയാളം', category: 'Indian' },
+    { code: 'pa', name: 'Punjabi', native: 'ਪੰਜਾਬੀ', category: 'Indian' },
+    { code: 'ur', name: 'Urdu', native: 'اردو', category: 'Indian' },
+    // Foreign Languages
+    { code: 'es', name: 'Spanish', native: 'Español', category: 'Foreign' },
+    { code: 'fr', name: 'French', native: 'Français', category: 'Foreign' },
+    { code: 'de', name: 'German', native: 'Deutsch', category: 'Foreign' },
+    { code: 'zh', name: 'Chinese', native: '中文', category: 'Foreign' },
+    { code: 'ja', name: 'Japanese', native: '日本語', category: 'Foreign' },
+    { code: 'ko', name: 'Korean', native: '한국어', category: 'Foreign' },
+    { code: 'ar', name: 'Arabic', native: 'العربية', category: 'Foreign' },
+    { code: 'ru', name: 'Russian', native: 'Русский', category: 'Foreign' },
+    { code: 'pt', name: 'Portuguese', native: 'Português', category: 'Foreign' },
+    { code: 'it', name: 'Italian', native: 'Italiano', category: 'Foreign' },
+    { code: 'nl', name: 'Dutch', native: 'Nederlands', category: 'Foreign' },
+    { code: 'tr', name: 'Turkish', native: 'Türkçe', category: 'Foreign' }
   ]);
   const [itemTranslations, setItemTranslations] = useState({});
 
@@ -1064,7 +1078,7 @@ export default function EchoScribe() {
                 <div className="mt-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 backdrop-blur-sm rounded-2xl p-4 border border-blue-500/30">
                   <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between mb-3">
                     <h4 className="text-sm font-semibold text-blue-300 flex items-center gap-2">
-                      🌐 Translate to Indian Language
+                      🌐 Translate to Any Language
                     </h4>
                     <div className="flex gap-2 items-center w-full sm:w-auto">
                       <select
@@ -1072,11 +1086,20 @@ export default function EchoScribe() {
                         onChange={(e) => setSelectedLanguage(e.target.value)}
                         className="flex-1 sm:flex-none px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
-                        {languages.map(lang => (
-                          <option key={lang.code} value={lang.code}>
-                            {lang.native} ({lang.name})
-                          </option>
-                        ))}
+                        <optgroup label="🇮🇳 Indian Languages">
+                          {languages.filter(l => l.category === 'Indian').map(lang => (
+                            <option key={lang.code} value={lang.code}>
+                              {lang.native} ({lang.name})
+                            </option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="🌍 Foreign Languages">
+                          {languages.filter(l => l.category === 'Foreign').map(lang => (
+                            <option key={lang.code} value={lang.code}>
+                              {lang.native} ({lang.name})
+                            </option>
+                          ))}
+                        </optgroup>
                       </select>
                       <button
                         onClick={() => translateText(transcript)}
@@ -1256,11 +1279,20 @@ export default function EchoScribe() {
                         defaultValue=""
                       >
                         <option value="" disabled>🌐 Translate to...</option>
-                        {languages.map(lang => (
-                          <option key={lang.code} value={lang.code}>
-                            {lang.native}
-                          </option>
-                        ))}
+                        <optgroup label="🇮🇳 Indian Languages">
+                          {languages.filter(l => l.category === 'Indian').map(lang => (
+                            <option key={lang.code} value={lang.code}>
+                              {lang.native}
+                            </option>
+                          ))}
+                        </optgroup>
+                        <optgroup label="🌍 Foreign Languages">
+                          {languages.filter(l => l.category === 'Foreign').map(lang => (
+                            <option key={lang.code} value={lang.code}>
+                              {lang.native}
+                            </option>
+                          ))}
+                        </optgroup>
                       </select>
                     </div>
 
