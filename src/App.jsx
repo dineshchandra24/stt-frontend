@@ -1580,11 +1580,12 @@ export default function EchoScribe() {
                 </h4>
                 <a 
                   href="mailto:dcm77040@gmail.com"
-                  className="text-purple-400 hover:text-purple-300 font-semibold text-base transition-colors flex items-center gap-2"
+                  className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white rounded-xl transition-all duration-300 font-semibold shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:scale-105 group"
                 >
-                  dcm77040@gmail.com
+                  <Mail className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+                  Send us an Email
                 </a>
-                <p className="text-xs text-slate-400 mt-2">We typically respond within 24-48 hours</p>
+                <p className="text-xs text-slate-400 mt-3">We typically respond within 24-48 hours</p>
               </div>
               
               <div>
@@ -1748,9 +1749,12 @@ export default function EchoScribe() {
               <Lock className="w-3 h-3" />
               <span>Secure & Encrypted</span>
               <span className="mx-2">•</span>
-              <Mail className="w-3 h-3" />
-              <a href="mailto:dcm77040@gmail.com" className="hover:text-purple-400 transition-colors">
-                dcm77040@gmail.com
+              <a 
+                href="mailto:dcm77040@gmail.com"
+                className="flex items-center justify-center w-8 h-8 bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30 rounded-lg transition-all duration-300 hover:scale-110 group border border-purple-500/20"
+                title="Contact via Email"
+              >
+                <Mail className="w-4 h-4 text-purple-400 group-hover:rotate-12 transition-transform duration-300" />
               </a>
             </div>
           </div>
