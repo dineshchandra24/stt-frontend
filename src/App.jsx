@@ -952,7 +952,7 @@ export default function EchoScribe() {
       {currentView === 'home' && (
         <div className="max-w-7xl mx-auto px-4 py-8 relative z-10 flex-1 w-full">
           {!isAuthenticated && (
-            <div className="bg-gradient-to-r from-purple-900/40 to-pink-900/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 p-4 mb-6 shadow-lg shadow-purple-500/10">
+            <div className="max-w-4xl mx-auto bg-gradient-to-r from-purple-900/40 to-pink-900/40 backdrop-blur-xl rounded-2xl border border-purple-500/30 p-4 mb-6 shadow-lg shadow-purple-500/10">
               <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-3 text-center md:text-left">
                   <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-purple-500/30">
@@ -1532,7 +1532,7 @@ export default function EchoScribe() {
 
       {currentView === 'profile' && (
         <div className="max-w-7xl mx-auto px-4 py-8 relative z-10 flex-1 w-full">
-          <div className="bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-purple-500/20 p-6 md:p-10 shadow-2xl shadow-purple-500/10">
+          <div className="max-w-5xl mx-auto bg-slate-900/60 backdrop-blur-xl rounded-3xl border border-purple-500/20 p-6 md:p-10 shadow-2xl shadow-purple-500/10">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-8 text-center">Profile Settings</h2>
             
             <div className="flex flex-col items-center gap-5 mb-10 pb-10 border-b border-purple-500/20">
