@@ -621,7 +621,7 @@ export default function EchoScribe() {
       )}
 
       {showLogoutConfirm && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in">
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/20 rounded-3xl shadow-2xl p-8 max-w-sm w-full animate-in zoom-in">
             <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <LogOut className="w-8 h-8 text-white" />
@@ -647,7 +647,7 @@ export default function EchoScribe() {
       )}
 
       {showClearAllConfirm && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in">
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/20 rounded-3xl shadow-2xl p-8 max-w-sm w-full animate-in zoom-in">
             <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Trash2 className="w-8 h-8 text-white" />
@@ -673,7 +673,7 @@ export default function EchoScribe() {
       )}
 
       {showAuthModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowAuthModal(false)}>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in" onClick={() => setShowAuthModal(false)}>
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/20 rounded-3xl shadow-2xl p-8 max-w-md w-full animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-6">
               <div className="flex items-center gap-4">
@@ -1332,8 +1332,8 @@ export default function EchoScribe() {
           </div>
 
           {selectedItem && (
-            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setSelectedItem(null)}>
-              <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
+            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in" onClick={() => setSelectedItem(null)}>
+              <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-6 md:p-8 max-w-2xl w-full max-h-[85vh] overflow-y-auto animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-start mb-6">
                   <div>
                     <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
@@ -1590,7 +1590,7 @@ export default function EchoScribe() {
       
       {/* Footer Modals */}
       {showFooterModal === 'terms' && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowFooterModal(null)}>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in" onClick={() => setShowFooterModal(null)}>
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-6">
               <div className="flex items-center gap-3">
@@ -1660,7 +1660,7 @@ export default function EchoScribe() {
       )}
 
       {showFooterModal === 'privacy' && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowFooterModal(null)}>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in" onClick={() => setShowFooterModal(null)}>
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-6">
               <div className="flex items-center gap-3">
@@ -1730,7 +1730,7 @@ export default function EchoScribe() {
       )}
 
       {showFooterModal === 'about' && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowFooterModal(null)}>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in" onClick={() => setShowFooterModal(null)}>
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-6">
               <div className="flex items-center gap-3">
@@ -1794,7 +1794,7 @@ export default function EchoScribe() {
       )}
 
       {showFooterModal === 'support' && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowFooterModal(null)}>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in" onClick={() => setShowFooterModal(null)}>
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-6">
               <div className="flex items-center gap-3">
@@ -1875,7 +1875,7 @@ export default function EchoScribe() {
       )}
 
       {showFooterModal === 'contact' && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowFooterModal(null)}>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in" onClick={() => setShowFooterModal(null)}>
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-6">
               <div className="flex items-center gap-3">
@@ -1943,7 +1943,7 @@ export default function EchoScribe() {
       )}
 
       {showFooterModal === 'faq' && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in" onClick={() => setShowFooterModal(null)}>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in" onClick={() => setShowFooterModal(null)}>
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-6">
               <div className="flex items-center gap-3">
