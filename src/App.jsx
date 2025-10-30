@@ -1535,7 +1535,7 @@ export default function EchoScribe() {
           <div className="bg-slate-900/60 backdrop-blur-xl rounded-2xl border border-purple-500/20 p-5 md:p-6 shadow-2xl shadow-purple-500/10">
             <h2 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-5 text-center">Profile Settings</h2>
             
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div className="mb-6">
               {/* Profile Info Section */}
               <div className="bg-slate-800/40 rounded-xl p-4 border border-purple-500/10">
                 <h3 className="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
@@ -1559,26 +1559,6 @@ export default function EchoScribe() {
                   <div className="flex-1 min-w-0">
                     <h4 className="text-base font-bold text-white truncate">{currentUser?.name}</h4>
                     <p className="text-xs text-slate-400 truncate">{currentUser?.email}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Security Status */}
-              <div className="bg-slate-800/40 rounded-xl p-4 border border-purple-500/10">
-                <h3 className="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-emerald-400" />
-                  Security Status
-                </h3>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-400">Authentication</span>
-                    <span className="text-emerald-400 font-semibold">Active</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-400">Password</span>
-                    <span className={`font-semibold ${hasPassword ? 'text-emerald-400' : 'text-orange-400'}`}>
-                      {hasPassword ? 'Set' : 'Not Set'}
-                    </span>
                   </div>
                 </div>
               </div>
