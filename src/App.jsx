@@ -1275,18 +1275,37 @@ export default function EchoScribe() {
                           <p>{new Date(item.createdAt).toLocaleTimeString()}</p>
                         </div>
                       </div>
-                      <button
-                        onClick={() => deleteTranscription(item._id)}
-                        disabled={deletingId === item._id}
-                        className="p-2 text-red-400 hover:text-red-300 hover:bg-red-950/50 rounded-xl transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
-                        title="Delete"
-                      >
-                        {deletingId === item._id ? (
-                          <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin"></div>
-                        ) : (
-                          <Trash2 size={16} />
-                        )}
-                      </button>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={async () => {
+                            const text = `EchoScribe Transcription\n\nDate: ${new Date(item.createdAt).toLocaleDateString()}\nTime: ${new Date(item.createdAt).toLocaleTimeString()}\n\n${item.text}`;
+                            const blob = new Blob([text], { type: 'text/plain' });
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `Transcription_${new Date(item.createdAt).getTime()}.txt`;
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            showSuccess('Transcription downloaded');
+                          }}
+                          className="p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-950/50 rounded-xl transition-all duration-300"
+                          title="Download"
+                        >
+                          <Download size={16} />
+                        </button>
+                        <button
+                          onClick={() => deleteTranscription(item._id)}
+                          disabled={deletingId === item._id}
+                          className="p-2 text-red-400 hover:text-red-300 hover:bg-red-950/50 rounded-xl transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
+                          title="Delete"
+                        >
+                          {deletingId === item._id ? (
+                            <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin"></div>
+                          ) : (
+                            <Trash2 size={16} />
+                          )}
+                        </button>
+                      </div>
                     </div>
 
                     <div className="bg-slate-900/50 rounded-xl p-4 mb-4 max-h-32 overflow-y-auto border border-slate-700">
