@@ -448,7 +448,9 @@ export default function EchoScribe() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `EchoScribe_${new Date().getTime()}.pdf`;
+      const now = new Date();
+      const timestamp = now.toISOString().replace(/:/g, '-').split('.')[0];
+      a.download = `EchoScribe_${timestamp}.pdf`;
       a.click();
     } catch (err) {
       console.error('Error downloading:', err);
@@ -1294,12 +1296,24 @@ export default function EchoScribe() {
                       <div className="flex gap-2">
                         <button
                           onClick={async () => {
-                            const text = `EchoScribe Transcription\n\nDate: ${new Date(item.createdAt).toLocaleDateString()}\nTime: ${new Date(item.createdAt).toLocaleTimeString()}\n\n${item.text}`;
+                            const date = new Date(item.createdAt);
+                            const formattedDate = date.toLocaleDateString('en-US', { 
+                              year: 'numeric', 
+                              month: 'long', 
+                              day: 'numeric' 
+                            });
+                            const formattedTime = date.toLocaleTimeString('en-US', { 
+                              hour: '2-digit', 
+                              minute: '2-digit', 
+                              second: '2-digit',
+                              hour12: true 
+                            });
+                            const text = `EchoScribe Transcription\n\nDate: ${formattedDate}\nTime: ${formattedTime}\n\n${item.text}`;
                             const blob = new Blob([text], { type: 'text/plain' });
                             const url = window.URL.createObjectURL(blob);
                             const a = document.createElement('a');
                             a.href = url;
-                            a.download = `Transcription_${new Date(item.createdAt).getTime()}.txt`;
+                            a.download = `Transcription_${date.getTime()}.txt`;
                             a.click();
                             window.URL.revokeObjectURL(url);
                             showSuccess('Transcription downloaded');
