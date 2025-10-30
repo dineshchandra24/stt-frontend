@@ -1376,7 +1376,7 @@ export default function EchoScribe() {
           </div>
 
           {selectedItem && (
-            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[70] animate-in fade-in" onClick={() => setSelectedItem(null)}>
+            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in" style={{ zIndex: 9999 }} onClick={() => setSelectedItem(null)}>
               <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-6 md:p-8 max-w-2xl w-full max-h-[85vh] flex flex-col animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-start mb-6">
                   <div>
@@ -2098,7 +2098,7 @@ export default function EchoScribe() {
       )}
 
       {/* Footer */}
-      <footer className="bg-slate-900/40 backdrop-blur-xl border-t border-purple-500/10 relative z-10 mt-8">
+      <footer className="bg-slate-900/40 backdrop-blur-xl border-t border-purple-500/10 relative z-10 mt-8" style={{ position: 'relative' }}>
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-5">
             {/* Brand Section */}
