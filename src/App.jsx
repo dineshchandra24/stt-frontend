@@ -71,6 +71,7 @@ export default function EchoScribe() {
     { code: 'tr', name: 'Turkish', native: 'Türkçe', category: 'Foreign' }
   ]);
   const [itemTranslations, setItemTranslations] = useState({});
+  const [translatingItemId, setTranslatingItemId] = useState(null);
 
   const mediaStreamRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -531,6 +532,7 @@ export default function EchoScribe() {
   };
 
   const translateHistoryItem = async (itemId, text, targetLang) => {
+    setTranslatingItemId(itemId);
     try {
       // Using MyMemory API directly with registered email
       const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLang}&de=cricketkvideos6@gmail.com`;
@@ -553,6 +555,8 @@ export default function EchoScribe() {
     } catch (error) {
       console.error('Translation error:', error);
       alert('Translation service unavailable. Please try again later.');
+    } finally {
+      setTranslatingItemId(null);
     }
   };
 
@@ -1324,10 +1328,13 @@ export default function EchoScribe() {
                             e.target.value = '';
                           }
                         }}
-                        className="flex-1 px-2 py-1.5 text-xs bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        disabled={translatingItemId === item._id}
+                        className="flex-1 px-2 py-1.5 text-xs bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                         defaultValue=""
                       >
-                        <option value="" disabled>🌐 Translate to...</option>
+                        <option value="" disabled>
+                          {translatingItemId === item._id ? '🔄 Translating...' : '🌐 Translate to...'}
+                        </option>
                         <optgroup label="🇮🇳 Indian Languages">
                           {languages.filter(l => l.category === 'Indian').map(lang => (
                             <option key={lang.code} value={lang.code}>
