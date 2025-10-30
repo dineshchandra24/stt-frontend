@@ -1374,159 +1374,6 @@ export default function EchoScribe() {
               </div>
             )}
           </div>
-
-          {selectedItem && (
-            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in" style={{ zIndex: 9999 }} onClick={() => setSelectedItem(null)}>
-              <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-6 md:p-8 max-w-2xl w-full max-h-[85vh] flex flex-col animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-purple-400" />
-                      Full Transcription
-                    </h3>
-                    <p className="text-sm text-slate-400">
-                      {new Date(selectedItem.createdAt).toLocaleDateString()} • {new Date(selectedItem.createdAt).toLocaleTimeString()}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setSelectedItem(null)}
-                    className="p-2 hover:bg-slate-800 rounded-xl transition-all duration-300 text-slate-400 hover:text-white"
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-
-                {/* Scrollable content area */}
-                <div className="flex-1 overflow-y-auto mb-4 space-y-4">
-                  <div className="bg-slate-900/50 rounded-2xl p-6 text-slate-200 text-sm leading-relaxed border border-purple-500/20 shadow-inner">
-                    {selectedItem.text}
-                  </div>
-
-                  {/* Translation Section for Full View */}
-                  <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 backdrop-blur-sm rounded-2xl p-4 border border-blue-500/30">
-                    <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between mb-3">
-                      <h4 className="text-sm font-semibold text-blue-300 flex items-center gap-2">
-                        🌐 Translate This Transcription
-                      </h4>
-                      <div className="flex gap-2 items-center w-full sm:w-auto">
-                        <select
-                          value={selectedLanguage}
-                          onChange={(e) => setSelectedLanguage(e.target.value)}
-                          className="flex-1 sm:flex-none px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                          <optgroup label="🇮🇳 Indian Languages">
-                            {languages.filter(l => l.category === 'Indian').map(lang => (
-                              <option key={lang.code} value={lang.code}>
-                                {lang.native} ({lang.name})
-                              </option>
-                            ))}
-                          </optgroup>
-                          <optgroup label="🌍 Foreign Languages">
-                            {languages.filter(l => l.category === 'Foreign').map(lang => (
-                              <option key={lang.code} value={lang.code}>
-                                {lang.native} ({lang.name})
-                              </option>
-                            ))}
-                          </optgroup>
-                        </select>
-                        <button
-                          onClick={() => translateText(selectedItem.text)}
-                          disabled={isTranslating}
-                          className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl transition-all duration-300 text-xs font-semibold shadow-lg shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                        >
-                          {isTranslating ? (
-                            <>
-                              <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                              <span>Translating...</span>
-                            </>
-                          ) : (
-                            'Translate'
-                          )}
-                        </button>
-                      </div>
-                    </div>
-
-                    {showTranslation && translatedText && (
-                      <div className="bg-slate-900/50 rounded-xl p-4 border border-blue-500/20 mt-3">
-                        <div className="flex justify-between items-center mb-2">
-                          <p className="text-xs text-blue-300 font-semibold">
-                            Translated to {languages.find(l => l.code === selectedLanguage)?.native}
-                          </p>
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => copyToClipboard(translatedText, 'translation-modal')}
-                              disabled={copyingId === 'translation-modal'}
-                              className="text-xs text-blue-300 hover:text-blue-200 flex items-center gap-1 disabled:opacity-70"
-                            >
-                              {copyingId === 'translation-modal' ? (
-                                <>
-                                  <div className="w-3 h-3 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"></div>
-                                  <span>Copying...</span>
-                                </>
-                              ) : (
-                                <>
-                                  <Copy size={12} /> Copy
-                                </>
-                              )}
-                            </button>
-                            <button
-                              onClick={() => {
-                                setShowTranslation(false);
-                                setTranslatedText('');
-                              }}
-                              className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1 ml-2"
-                            >
-                              <X size={12} /> Close
-                            </button>
-                          </div>
-                        </div>
-                        <p className="text-slate-200 text-sm leading-relaxed max-h-48 overflow-y-auto">{translatedText}</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Fixed action buttons at bottom */}
-                <div className="flex gap-3 pt-4 border-t border-purple-500/20">
-                  <button
-                    onClick={() => copyToClipboard(showTranslation && translatedText ? translatedText : selectedItem.text, `modal-${selectedItem._id}`)}
-                    disabled={copyingId === `modal-${selectedItem._id}`}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl transition-all duration-300 font-semibold text-sm shadow-lg shadow-blue-500/30 disabled:opacity-70 disabled:cursor-not-allowed"
-                  >
-                    {copyingId === `modal-${selectedItem._id}` ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>Copying...</span>
-                      </>
-                    ) : (
-                      <span className="flex items-center gap-2">
-                        <Copy size={18} /> Copy Text
-                      </span>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => {
-                      deleteTranscription(selectedItem._id);
-                      setSelectedItem(null);
-                    }}
-                    disabled={deletingId === selectedItem._id}
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-xl transition-all duration-300 font-semibold text-sm shadow-lg shadow-red-500/30 disabled:opacity-70 disabled:cursor-not-allowed"
-                  >
-                    {deletingId === selectedItem._id ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>Deleting...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Trash2 size={18} /> Delete
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       )}
 
@@ -2179,6 +2026,160 @@ export default function EchoScribe() {
           </div>
         </div>
       </footer>
+
+      {/* Full Transcription Modal - Outside footer so it overlays everything */}
+      {selectedItem && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in" style={{ zIndex: 9999 }} onClick={() => setSelectedItem(null)}>
+          <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-6 md:p-8 max-w-2xl w-full max-h-[85vh] flex flex-col animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-purple-400" />
+                  Full Transcription
+                </h3>
+                <p className="text-sm text-slate-400">
+                  {new Date(selectedItem.createdAt).toLocaleDateString()} • {new Date(selectedItem.createdAt).toLocaleTimeString()}
+                </p>
+              </div>
+              <button
+                onClick={() => setSelectedItem(null)}
+                className="p-2 hover:bg-slate-800 rounded-xl transition-all duration-300 text-slate-400 hover:text-white"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Scrollable content area */}
+            <div className="flex-1 overflow-y-auto mb-4 space-y-4">
+              <div className="bg-slate-900/50 rounded-2xl p-6 text-slate-200 text-sm leading-relaxed border border-purple-500/20 shadow-inner">
+                {selectedItem.text}
+              </div>
+
+              {/* Translation Section for Full View */}
+              <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 backdrop-blur-sm rounded-2xl p-4 border border-blue-500/30">
+                <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between mb-3">
+                  <h4 className="text-sm font-semibold text-blue-300 flex items-center gap-2">
+                    🌐 Translate This Transcription
+                  </h4>
+                  <div className="flex gap-2 items-center w-full sm:w-auto">
+                    <select
+                      value={selectedLanguage}
+                      onChange={(e) => setSelectedLanguage(e.target.value)}
+                      className="flex-1 sm:flex-none px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <optgroup label="🇮🇳 Indian Languages">
+                        {languages.filter(l => l.category === 'Indian').map(lang => (
+                          <option key={lang.code} value={lang.code}>
+                            {lang.native} ({lang.name})
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="🌍 Foreign Languages">
+                        {languages.filter(l => l.category === 'Foreign').map(lang => (
+                          <option key={lang.code} value={lang.code}>
+                            {lang.native} ({lang.name})
+                          </option>
+                        ))}
+                      </optgroup>
+                    </select>
+                    <button
+                      onClick={() => translateText(selectedItem.text)}
+                      disabled={isTranslating}
+                      className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl transition-all duration-300 text-xs font-semibold shadow-lg shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                    >
+                      {isTranslating ? (
+                        <>
+                          <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <span>Translating...</span>
+                        </>
+                      ) : (
+                        'Translate'
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {showTranslation && translatedText && (
+                  <div className="bg-slate-900/50 rounded-xl p-4 border border-blue-500/20 mt-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <p className="text-xs text-blue-300 font-semibold">
+                        Translated to {languages.find(l => l.code === selectedLanguage)?.native}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => copyToClipboard(translatedText, 'translation-modal')}
+                          disabled={copyingId === 'translation-modal'}
+                          className="text-xs text-blue-300 hover:text-blue-200 flex items-center gap-1 disabled:opacity-70"
+                        >
+                          {copyingId === 'translation-modal' ? (
+                            <>
+                              <div className="w-3 h-3 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"></div>
+                              <span>Copying...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={12} /> Copy
+                            </>
+                          )}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setShowTranslation(false);
+                            setTranslatedText('');
+                          }}
+                          className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1 ml-2"
+                        >
+                          <X size={12} /> Close
+                        </button>
+                      </div>
+                    </div>
+                    <p className="text-slate-200 text-sm leading-relaxed max-h-48 overflow-y-auto">{translatedText}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Fixed action buttons at bottom */}
+            <div className="flex gap-3 pt-4 border-t border-purple-500/20">
+              <button
+                onClick={() => copyToClipboard(showTranslation && translatedText ? translatedText : selectedItem.text, `modal-${selectedItem._id}`)}
+                disabled={copyingId === `modal-${selectedItem._id}`}
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl transition-all duration-300 font-semibold text-sm shadow-lg shadow-blue-500/30 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {copyingId === `modal-${selectedItem._id}` ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Copying...</span>
+                  </>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <Copy size={18} /> Copy Text
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => {
+                  deleteTranscription(selectedItem._id);
+                  setSelectedItem(null);
+                }}
+                disabled={deletingId === selectedItem._id}
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-xl transition-all duration-300 font-semibold text-sm shadow-lg shadow-red-500/30 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {deletingId === selectedItem._id ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Deleting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 size={18} /> Delete
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
