@@ -1126,23 +1126,20 @@ export default function EchoScribe() {
 
                   {showTranslation && translatedText && (
                     <div className="bg-slate-900/50 rounded-xl p-4 border border-blue-500/20 mt-3">
-                      <div className="flex flex-col gap-2 mb-3">
+                      <div className="flex items-center justify-between mb-3">
                         <p className="text-xs text-blue-300 font-semibold">
                           Translated to {languages.find(l => l.code === selectedLanguage)?.native}
                         </p>
-                        <div className="flex flex-wrap items-center gap-2">
+                        <div className="flex items-center gap-2">
                           <button
                             onClick={() => copyToClipboard(translatedText, 'translation-main')}
-                            className="text-xs text-blue-300 hover:text-blue-200 flex items-center gap-1 px-2 py-1 bg-blue-500/10 rounded-lg"
+                            className="p-2 text-blue-300 hover:text-blue-200 bg-blue-500/10 rounded-lg"
+                            title="Copy"
                           >
                             {copyingId === 'translation-main' ? (
-                              <>
-                                <Check size={12} className="text-emerald-400" /> Copied
-                              </>
+                              <Check size={14} className="text-emerald-400" />
                             ) : (
-                              <>
-                                <Copy size={12} /> Copy
-                              </>
+                              <Copy size={14} />
                             )}
                           </button>
                           <button
@@ -1158,18 +1155,20 @@ export default function EchoScribe() {
                               window.URL.revokeObjectURL(url);
                               showSuccess('Translation downloaded');
                             }}
-                            className="text-xs text-emerald-300 hover:text-emerald-200 flex items-center gap-1 px-2 py-1 bg-emerald-500/10 rounded-lg"
+                            className="p-2 text-emerald-300 hover:text-emerald-200 bg-emerald-500/10 rounded-lg"
+                            title="Download"
                           >
-                            <Download size={12} /> Download
+                            <Download size={14} />
                           </button>
                           <button
                             onClick={() => {
                               setShowTranslation(false);
                               setTranslatedText('');
                             }}
-                            className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1 px-2 py-1 bg-red-500/10 rounded-lg"
+                            className="p-2 text-red-400 hover:text-red-300 bg-red-500/10 rounded-lg"
+                            title="Close"
                           >
-                            <X size={12} /> Close
+                            <X size={14} />
                           </button>
                         </div>
                       </div>
@@ -2061,15 +2060,15 @@ export default function EchoScribe() {
 
               {/* Translation Section for Full View */}
               <div className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 backdrop-blur-sm rounded-2xl p-4 border border-blue-500/30">
-                <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between mb-3">
+                <div className="flex flex-col gap-3 mb-3">
                   <h4 className="text-sm font-semibold text-blue-300 flex items-center gap-2">
                     🌐 Translate This Transcription
                   </h4>
-                  <div className="flex gap-2 items-center w-full sm:w-auto">
+                  <div className="flex flex-col sm:flex-row gap-2 w-full">
                     <select
                       value={selectedLanguage}
                       onChange={(e) => setSelectedLanguage(e.target.value)}
-                      className="flex-1 sm:flex-none px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 px-3 py-2 text-xs bg-slate-800 border border-slate-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <optgroup label="🇮🇳 Indian Languages">
                         {languages.filter(l => l.category === 'Indian').map(lang => (
@@ -2089,7 +2088,7 @@ export default function EchoScribe() {
                     <button
                       onClick={() => translateText(selectedItem.text)}
                       disabled={isTranslating}
-                      className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl transition-all duration-300 text-xs font-semibold shadow-lg shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                      className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl transition-all duration-300 text-xs font-semibold shadow-lg shadow-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       {isTranslating ? (
                         <>
@@ -2105,25 +2104,21 @@ export default function EchoScribe() {
 
                 {showTranslation && translatedText && (
                   <div className="bg-slate-900/50 rounded-xl p-4 border border-blue-500/20 mt-3">
-                    <div className="flex flex-col gap-2 mb-3">
+                    <div className="flex items-center justify-between mb-3">
                       <p className="text-xs text-blue-300 font-semibold">
                         Translated to {languages.find(l => l.code === selectedLanguage)?.native}
                       </p>
-                      <div className="flex flex-wrap items-center gap-2">
+                      <div className="flex items-center gap-2">
                         <button
                           onClick={() => copyToClipboard(translatedText, 'translation-modal')}
                           disabled={copyingId === 'translation-modal'}
-                          className="text-xs text-blue-300 hover:text-blue-200 flex items-center gap-1 disabled:opacity-70 px-2 py-1 bg-blue-500/10 rounded-lg"
+                          className="p-2 text-blue-300 hover:text-blue-200 bg-blue-500/10 rounded-lg disabled:opacity-70"
+                          title="Copy"
                         >
                           {copyingId === 'translation-modal' ? (
-                            <>
-                              <div className="w-3 h-3 border-2 border-blue-300 border-t-transparent rounded-full animate-spin"></div>
-                              <span>Copying...</span>
-                            </>
+                            <Check size={14} className="text-emerald-400" />
                           ) : (
-                            <>
-                              <Copy size={12} /> Copy
-                            </>
+                            <Copy size={14} />
                           )}
                         </button>
                         <button
@@ -2139,18 +2134,20 @@ export default function EchoScribe() {
                             window.URL.revokeObjectURL(url);
                             showSuccess('Translation downloaded');
                           }}
-                          className="text-xs text-emerald-300 hover:text-emerald-200 flex items-center gap-1 px-2 py-1 bg-emerald-500/10 rounded-lg"
+                          className="p-2 text-emerald-300 hover:text-emerald-200 bg-emerald-500/10 rounded-lg"
+                          title="Download"
                         >
-                          <Download size={12} /> Download
+                          <Download size={14} />
                         </button>
                         <button
                           onClick={() => {
                             setShowTranslation(false);
                             setTranslatedText('');
                           }}
-                          className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1 px-2 py-1 bg-red-500/10 rounded-lg"
+                          className="p-2 text-red-400 hover:text-red-300 bg-red-500/10 rounded-lg"
+                          title="Close"
                         >
-                          <X size={12} /> Close
+                          <X size={14} />
                         </button>
                       </div>
                     </div>
