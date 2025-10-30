@@ -1376,7 +1376,7 @@ export default function EchoScribe() {
           </div>
 
           {selectedItem && (
-            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[60] animate-in fade-in" onClick={() => setSelectedItem(null)}>
+            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[70] animate-in fade-in" onClick={() => setSelectedItem(null)}>
               <div className="bg-gradient-to-br from-slate-900 to-slate-800 border border-purple-500/30 rounded-3xl shadow-2xl p-6 md:p-8 max-w-2xl w-full max-h-[85vh] flex flex-col animate-in zoom-in" onClick={(e) => e.stopPropagation()}>
                 <div className="flex justify-between items-start mb-6">
                   <div>
