@@ -1147,6 +1147,23 @@ export default function EchoScribe() {
                           </button>
                           <button
                             onClick={() => {
+                              const langName = languages.find(l => l.code === selectedLanguage)?.native || selectedLanguage;
+                              const text = `EchoScribe Translation\n\nTranslated to: ${langName}\nDate: ${new Date().toLocaleDateString()}\nTime: ${new Date().toLocaleTimeString()}\n\n${translatedText}`;
+                              const blob = new Blob([text], { type: 'text/plain' });
+                              const url = window.URL.createObjectURL(blob);
+                              const a = document.createElement('a');
+                              a.href = url;
+                              a.download = `Translation_${langName}_${new Date().getTime()}.txt`;
+                              a.click();
+                              window.URL.revokeObjectURL(url);
+                              showSuccess('Translation downloaded');
+                            }}
+                            className="text-xs text-emerald-300 hover:text-emerald-200 flex items-center gap-1 ml-2"
+                          >
+                            <Download size={12} /> Download
+                          </button>
+                          <button
+                            onClick={() => {
                               setShowTranslation(false);
                               setTranslatedText('');
                             }}
@@ -2108,6 +2125,23 @@ export default function EchoScribe() {
                               <Copy size={12} /> Copy
                             </>
                           )}
+                        </button>
+                        <button
+                          onClick={() => {
+                            const langName = languages.find(l => l.code === selectedLanguage)?.native || selectedLanguage;
+                            const text = `EchoScribe Translation\n\nTranslated to: ${langName}\nDate: ${new Date(selectedItem.createdAt).toLocaleDateString()}\nTime: ${new Date(selectedItem.createdAt).toLocaleTimeString()}\n\n${translatedText}`;
+                            const blob = new Blob([text], { type: 'text/plain' });
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `Translation_${langName}_${new Date(selectedItem.createdAt).getTime()}.txt`;
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            showSuccess('Translation downloaded');
+                          }}
+                          className="text-xs text-emerald-300 hover:text-emerald-200 flex items-center gap-1 ml-2"
+                        >
+                          <Download size={12} /> Download
                         </button>
                         <button
                           onClick={() => {
