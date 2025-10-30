@@ -850,10 +850,10 @@ export default function EchoScribe() {
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
           <button 
             onClick={() => navigateTo('home')}
-            className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer group"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer group"
           >
-            <div className="bg-gradient-to-br from-purple-500 to-pink-600 w-11 h-11 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/30 group-hover:shadow-purple-500/50 transition-all duration-300">
-              <Mic className="w-6 h-6 text-white" />
+            <div className="bg-gradient-to-br from-purple-500 to-pink-600 w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/30 group-hover:shadow-purple-500/50 transition-all duration-300">
+              <Mic className="w-5 h-5 text-white" />
             </div>
             <div>
               <h1 className="text-lg font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">EchoScribe</h1>
