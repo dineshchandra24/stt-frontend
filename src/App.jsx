@@ -1641,12 +1641,13 @@ export default function EchoScribe() {
                   <li>Real-time voice recording with live timer</li>
                   <li>Audio file upload support (MP3, WAV, OGG, M4A, FLAC, WEBM)</li>
                   <li>Multiple authentication methods (Email, Phone, Google OAuth)</li>
-                  <li>Secure cloud storage with automatic sync</li>
+                  <li>AI-powered translation to 22+ languages (Indian & Foreign)</li>
+                  <li>Secure cloud storage with automatic sync across devices</li>
                   <li>Download transcriptions as PDF or TXT formats</li>
                   <li>Profile management with password controls</li>
-                  <li>Full transcription history with search capabilities</li>
+                  <li>Full transcription history with copy & view features</li>
                   <li>Cross-device compatibility with responsive design</li>
-                  <li>Dark mode optimized interface</li>
+                  <li>Dark mode optimized interface with modern UI</li>
                 </ul>
               </div>
               
@@ -1792,6 +1793,10 @@ export default function EchoScribe() {
                 <ul className="space-y-2 ml-2">
                   <li className="flex items-start gap-2">
                     <span className="text-purple-400 mt-1">•</span>
+                    <span>Translation and language support questions</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400 mt-1">•</span>
                     <span>Technical issues or bugs</span>
                   </li>
                   <li className="flex items-start gap-2">
@@ -1879,13 +1884,28 @@ export default function EchoScribe() {
               </div>
               
               <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-                <h4 className="text-base font-semibold text-white mb-2">What languages are supported?</h4>
-                <p>EchoScribe currently supports English transcription with high accuracy. We're working on adding more languages in future updates.</p>
+                <h4 className="text-base font-semibold text-white mb-2">Can I translate my transcriptions?</h4>
+                <p>Yes! EchoScribe offers translation to 22+ languages including Indian languages (Hindi, Marathi, Bengali, Tamil, Telugu, etc.) and foreign languages (Spanish, French, German, Chinese, Japanese, etc.). Click "View Full" on any transcription to access the translation feature.</p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <h4 className="text-base font-semibold text-white mb-2">How do I use the translation feature?</h4>
+                <p>Open any transcription in full view, select your desired language from the dropdown menu, and click "Translate". You can copy the translated text or keep both the original and translated versions.</p>
               </div>
               
               <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
                 <h4 className="text-base font-semibold text-white mb-2">Can I delete my transcriptions?</h4>
-                <p>Yes! You can delete individual transcriptions or clear your entire history at once. You have complete control over your data.</p>
+                <p>Yes! You can delete individual transcriptions or clear your entire history at once. Each transcription card has a delete button, and there's a "Clear All" option in the history page.</p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <h4 className="text-base font-semibold text-white mb-2">How do I manage my account password?</h4>
+                <p>Visit the Profile page to change your password. If you signed up with Google OAuth, you can set a password to enable email/password login as an additional authentication method.</p>
+              </div>
+              
+              <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                <h4 className="text-base font-semibold text-white mb-2">What translation languages are available?</h4>
+                <p>We support 22+ languages including Indian languages (Hindi, Marathi, Bengali, Gujarati, Tamil, Telugu, Kannada, Malayalam, Punjabi, Urdu) and foreign languages (Spanish, French, German, Chinese, Japanese, Korean, Arabic, Russian, Portuguese, Italian, Dutch, Turkish).</p>
               </div>
             </div>
           </div>
