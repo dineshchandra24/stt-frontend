@@ -1297,17 +1297,19 @@ export default function EchoScribe() {
                         <button
                           onClick={async () => {
                             const date = new Date(item.createdAt);
-                            const formattedDate = date.toLocaleDateString('en-US', { 
-                              year: 'numeric', 
-                              month: 'long', 
-                              day: 'numeric' 
-                            });
-                            const formattedTime = date.toLocaleTimeString('en-US', { 
-                              hour: '2-digit', 
-                              minute: '2-digit', 
-                              second: '2-digit',
-                              hour12: true 
-                            });
+                            const day = date.getDate().toString().padStart(2, '0');
+                            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                            const year = date.getFullYear();
+                            const formattedDate = `${day}/${month}/${year}`;
+                            
+                            let hours = date.getHours();
+                            const minutes = date.getMinutes().toString().padStart(2, '0');
+                            const seconds = date.getSeconds().toString().padStart(2, '0');
+                            const ampm = hours >= 12 ? 'PM' : 'AM';
+                            hours = hours % 12;
+                            hours = hours ? hours : 12;
+                            const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds} ${ampm}`;
+                            
                             const text = `EchoScribe Transcription\n\nDate: ${formattedDate}\nTime: ${formattedTime}\n\n${item.text}`;
                             const blob = new Blob([text], { type: 'text/plain' });
                             const url = window.URL.createObjectURL(blob);
@@ -2138,12 +2140,26 @@ export default function EchoScribe() {
                         <button
                           onClick={() => {
                             const langName = languages.find(l => l.code === selectedLanguage)?.native || selectedLanguage;
-                            const text = `EchoScribe Translation\n\nTranslated to: ${langName}\nDate: ${new Date(selectedItem.createdAt).toLocaleDateString()}\nTime: ${new Date(selectedItem.createdAt).toLocaleTimeString()}\n\n${translatedText}`;
+                            const date = new Date(selectedItem.createdAt);
+                            const day = date.getDate().toString().padStart(2, '0');
+                            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                            const year = date.getFullYear();
+                            const formattedDate = `${day}/${month}/${year}`;
+                            
+                            let hours = date.getHours();
+                            const minutes = date.getMinutes().toString().padStart(2, '0');
+                            const seconds = date.getSeconds().toString().padStart(2, '0');
+                            const ampm = hours >= 12 ? 'PM' : 'AM';
+                            hours = hours % 12;
+                            hours = hours ? hours : 12;
+                            const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes}:${seconds} ${ampm}`;
+                            
+                            const text = `EchoScribe Translation\n\nTranslated to: ${langName}\nDate: ${formattedDate}\nTime: ${formattedTime}\n\n${translatedText}`;
                             const blob = new Blob([text], { type: 'text/plain' });
                             const url = window.URL.createObjectURL(blob);
                             const a = document.createElement('a');
                             a.href = url;
-                            a.download = `Translation_${langName}_${new Date(selectedItem.createdAt).getTime()}.txt`;
+                            a.download = `Translation_${langName}_${date.getTime()}.txt`;
                             a.click();
                             window.URL.revokeObjectURL(url);
                             showSuccess('Translation downloaded');
