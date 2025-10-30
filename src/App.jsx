@@ -1293,68 +1293,9 @@ export default function EchoScribe() {
                       <p className="text-slate-300 text-xs leading-relaxed">{item.text}</p>
                     </div>
 
-                    {/* Translation for history item */}
-                    {itemTranslations[item._id] && (
-                      <div className="bg-blue-900/20 rounded-xl p-3 mb-3 border border-blue-500/20">
-                        <div className="flex justify-between items-center mb-1">
-                          <p className="text-xs text-blue-300 font-semibold">
-                            Translation ({languages.find(l => l.code === itemTranslations[item._id].language)?.native})
-                          </p>
-                          <button
-                            onClick={() => {
-                              setItemTranslations(prev => {
-                                const newTranslations = { ...prev };
-                                delete newTranslations[item._id];
-                                return newTranslations;
-                              });
-                            }}
-                            className="text-xs text-red-400 hover:text-red-300 flex items-center gap-1"
-                          >
-                            <X size={12} /> Close
-                          </button>
-                        </div>
-                        <p className="text-slate-200 text-xs leading-relaxed">
-                          {itemTranslations[item._id].text}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Translate dropdown */}
-                    <div className="mb-3 flex gap-2">
-                      <select
-                        onChange={(e) => {
-                          if (e.target.value) {
-                            translateHistoryItem(item._id, item.text, e.target.value);
-                            e.target.value = '';
-                          }
-                        }}
-                        disabled={translatingItemId === item._id}
-                        className="flex-1 px-2 py-1.5 text-xs bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                        defaultValue=""
-                      >
-                        <option value="" disabled>
-                          {translatingItemId === item._id ? '🔄 Translating...' : '🌐 Translate to...'}
-                        </option>
-                        <optgroup label="🇮🇳 Indian Languages">
-                          {languages.filter(l => l.category === 'Indian').map(lang => (
-                            <option key={lang.code} value={lang.code}>
-                              {lang.native}
-                            </option>
-                          ))}
-                        </optgroup>
-                        <optgroup label="🌍 Foreign Languages">
-                          {languages.filter(l => l.category === 'Foreign').map(lang => (
-                            <option key={lang.code} value={lang.code}>
-                              {lang.native}
-                            </option>
-                          ))}
-                        </optgroup>
-                      </select>
-                    </div>
-
                     <div className="flex gap-2">
                       <button
-                        onClick={() => copyToClipboard(itemTranslations[item._id] ? itemTranslations[item._id].text : item.text, `history-${item._id}`)}
+                        onClick={() => copyToClipboard(item.text, `history-${item._id}`)}
                         disabled={copyingId === `history-${item._id}`}
                         className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-xl transition-all duration-300 text-xs font-semibold border border-slate-700 disabled:opacity-70 disabled:cursor-not-allowed"
                       >
